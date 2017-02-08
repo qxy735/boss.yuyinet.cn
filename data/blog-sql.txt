@@ -1,0 +1,445 @@
+# 创建数据库
+create database if not exists `blog`;
+
+# 使用数据库
+use `blog`;
+
+# 创建用户表
+create table if not exists `blog_users`(
+	`id`	int(10)		unsigned primary key auto_increment not null,
+	`username`	varchar(32)	not null default '',
+	`password`	char(32)	not null default '',
+	`type`	tinyint(2)	unsigned not null default 0,
+	`status` tinyint(2) unsigned not null default 0,
+	`avatar`	varchar(300) not null default '',
+	`regip`	int(10) unsigned not null default 0,
+	`regtime` int(10)	unsigned not null default 0,
+	`loginip`	int(10)	unsigned not null default 0,
+	`logintime`	int(10)	unsigned not null default 0,
+	UNIQUE INDEX `username` (`username`) USING BTREE
+)engine=myisam charset utf8;
+
+# 创建用户详情表
+CREATE TABLE if not exists `blog_profiles` (
+`id`  int(10) UNSIGNED NOT NULL AUTO_INCREMENT ,
+`uid`  int(10) UNSIGNED NOT NULL ,
+`email`  varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '' ,
+`mobile`  char(11) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '' ,
+`zodiac`  tinyint(2)  NOT NULL DEFAULT 0 ,
+`birthday`  int(10) UNSIGNED NOT NULL DEFAULT 0 ,
+`coin`  int(10) UNSIGNED NOT NULL DEFAULT 0 ,
+`happy`  varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '' ,
+`address`  varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '' ,
+`edu`  tinyint(2) UNSIGNED NOT NULL DEFAULT 0 ,
+`age`  tinyint(2) UNSIGNED NOT NULL DEFAULT 0 ,
+`sex`  tinyint(1) UNSIGNED NOT NULL DEFAULT 0 ,
+`createtime`  int(10) UNSIGNED NOT NULL DEFAULT 0 ,
+`creator`  varchar(32) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '' ,
+`lastoperate`  int(10) UNSIGNED NOT NULL DEFAULT 0 ,
+`lastoperator`  varchar(32) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '' ,
+PRIMARY KEY (`id`),
+UNIQUE INDEX `uid` (`uid`) USING BTREE
+)ENGINE=myisam charset utf8;
+
+# 用户消息表
+CREATE TABLE if not exists `blog_messages` (
+`id`  int(10) UNSIGNED NOT NULL AUTO_INCREMENT ,
+`sendid`  int(10) UNSIGNED NOT NULL DEFAULT 0 ,
+`sendname`  varchar(32) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '' ,
+`title`  varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '' ,
+`content`  text CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL ,
+`typeid`  int(10) UNSIGNED NOT NULL DEFAULT 0 ,
+`msgtype`  tinyint(1) UNSIGNED NOT NULL DEFAULT 0 ,
+`isfriend`  tinyint(1) UNSIGNED NOT NULL DEFAULT 0 ,
+`sendtime`  int(10) UNSIGNED NOT NULL DEFAULT 0 ,
+`createtime`  int(10) UNSIGNED NOT NULL DEFAULT 0 ,
+`creator`  varchar(32) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '' ,
+`lastoperate`  int(10) UNSIGNED NOT NULL DEFAULT 0 ,
+`lastoperator`  varchar(32) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '' ,
+PRIMARY KEY (`id`),
+UNIQUE INDEX `send_post_title_grop_type_msgtype_time` (`sendid`, `title`, `typeid`, `msgtype`, `sendtime`) USING BTREE
+)ENGINE=myisam charset utf8;
+
+# 用户消息详情表
+CREATE TABLE if not exists `blog_messagedetails` (
+`id`  int(10) UNSIGNED NOT NULL AUTO_INCREMENT ,
+`messageid`  int(10) UNSIGNED NOT NULL DEFAULT 0 ,
+`postid`  int(10) UNSIGNED NOT NULL DEFAULT 0 ,
+`postname`  varchar(32) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '' ,
+`isread`  tinyint(1) UNSIGNED NOT NULL DEFAULT 0 ,
+`createtime`  int(10) UNSIGNED NOT NULL DEFAULT 0 ,
+`creator`  varchar(32) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '' ,
+`lastoperate`  int(10) UNSIGNED NOT NULL DEFAULT 0 ,
+`lastoperator`  varchar(32) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '' ,
+PRIMARY KEY (`id`),
+UNIQUE INDEX `message_post` (`messageid`, `postid`) USING BTREE
+)
+ENGINE=myisam charset utf8;
+
+# 消息类型
+CREATE TABLE if not exists `blog_msgtypes` (
+`id`  int(10) UNSIGNED NOT NULL AUTO_INCREMENT ,
+`name`  varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '' ,
+`enabled`  tinyint(1) UNSIGNED NOT NULL DEFAULT 0 ,
+`ispublic`  tinyint(1) UNSIGNED NOT NULL ,
+`createtime`  int(10) UNSIGNED NOT NULL DEFAULT 0 ,
+`creator`  varchar(32) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '' ,
+`lastoperate`  int(10) UNSIGNED NOT NULL DEFAULT 0 ,
+`lastoperator`  varchar(32) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '' ,
+PRIMARY KEY (`id`)
+)ENGINE=myisam charset utf8;
+
+# 用户角色表
+create table if not exists `blog_roles`(
+    `id`    int(10)     unsigned not null  primary key  auto_increment,
+    `name`  varchar(50) not null default '',
+    `code`  varchar(50) not null default '',
+    `type`  tinyint(2)  unsigned not null default 0,
+    `description`   varchar(300)    not null default '',
+    `displayorder`  tinyint(3)  unsigned not null default 0,
+    `enabled`   tinyint(1)  unsigned not null default 0,
+    `createtime`    int(10) unsigned not null default 0,
+    `creator`   varchar(32) not null default '',
+    `lastoperate` int(10)   unsigned not null default 0,
+    `lastoperator`  varchar(32) not null default '',
+    UNIQUE INDEX `code` (`code`) USING BTREE ,
+    UNIQUE INDEX `name` (`name`) USING BTREE
+)engine=myisam charset utf8;
+
+# 用户关联角色表
+create table if not exists `blog_user_roles`(
+    `id`    int(10)     unsigned not null primary key auto_increment,
+    `uid`   int(10)     unsigned not null default 0,
+    `roleid`    int(10) unsigned not null default 0,
+    `rolecode`  varchar(50) not null default '',
+    `createtime`    int(10) unsigned not null default 0,
+    `creator`   varchar(32) not null default '',
+    `lastoperate` int(10)   unsigned not null default 0,
+    `lastoperator`  varchar(32) not null default '',
+    UNIQUE INDEX `user_role` (`uid`, `roleid`) USING BTREE
+)engine=myisam charset utf8;
+
+# 权限项表
+create table if not exists `blog_authitems`(
+    `id`    int(10)     unsigned not null primary key auto_increment,
+    `parentid`  int(10) unsigned not null default 0,
+    `haschild`  tinyint(1)  unsigned not null default 0,
+    `code`  varchar(255)    not null default '',
+    `name`  varchar(50) not null default '',
+    `description`   varchar(300)    not null default '',
+    `auth`  text not null default '',
+    `enabled`   tinyint(1)  unsigned not null default 0,
+    `type`   tinyint(1)  unsigned not null default 0,
+    `displayorder`  tinyint(3) unsigned not null default 0,
+    `createtime`    int(10) unsigned not null default 0,
+    `creator`   varchar(32) not null default '',
+    `lastoperate` int(10)   unsigned not null default 0,
+    `lastoperator`  varchar(32) not null default '',
+    UNIQUE INDEX `code` (`code`) USING BTREE ,
+    UNIQUE INDEX `name` (`name`) USING BTREE
+)engine=myisam charset utf8;
+
+# 角色关联权限项表
+create table if not exists `blog_role_authitems`(
+    `id`        int(10)     unsigned not null primary key auto_increment,
+    `roleid`    int(10)     unsigned not null default 0,
+    `itemid`    int(10)     unsigned not null default 0,
+    `auth`      varchar(255)    not null default '',
+    `createtime`    int(10) unsigned not null default 0,
+    `creator`   varchar(32) not null default '',
+    `lastoperate` int(10)   unsigned not null default 0,
+    `lastoperator`  varchar(32) not null default '',
+    UNIQUE INDEX `role_item` (`roleid`, `itemid`) USING BTREE
+)engine=myisam charset utf8;
+
+# 用户关联权限项表
+create table if not exists `blog_user_authitems`(
+    `id`        int(10)     unsigned not null primary key auto_increment,
+    `uid`       int(10)     unsigned not null default 0,
+    `itemid`    int(10)     unsigned not null default 0,
+    `auth`      varchar(255)    not null default '',
+    `createtime`    int(10) unsigned not null default 0,
+    `creator`   varchar(32) not null default '',
+    `lastoperate` int(10)   unsigned not null default 0,
+    `lastoperator`  varchar(32) not null default '',
+    UNIQUE INDEX `user_item` (`uid`, `itemid`) USING BTREE
+)engine=myisam charset utf8;
+
+# 网站菜单表
+create table if not exists `blog_menus`(
+    `id`        int(10)     unsigned not null primary key auto_increment,
+    `parentid`  int(10)     unsigned not null default 0,
+    `haschild`  tinyint(1)  unsigned not null default 0,
+    `name`      varchar(50)    not null default '',
+    `code`      varchar(255)    not null default '',
+    `url`       varchar(255)    not null default '',
+    `auth`      text        not null default '',
+    `type`      tinyint(1)  unsigned not null default 0,
+    `enabled`   tinyint(1)  unsigned not null default 0,
+    `displayorder`  tinyint(3)  unsigned not null default 0,
+    `createtime`    int(10) unsigned not null default 0,
+    `creator`   varchar(32) not null default '',
+    `lastoperate` int(10)   unsigned not null default 0,
+    `lastoperator`  varchar(32) not null default '',
+    UNIQUE INDEX `code` (`code`) USING BTREE ,
+    INDEX `code_type_enabled` (`code`, `type`, `enabled`) USING BTREE
+)engine=myisam charset utf8;
+
+# IP限制表
+CREATE TABLE if not exists `blog_ips` (
+`id`  int(10) UNSIGNED NOT NULL AUTO_INCREMENT ,
+`ip`  int(10) UNSIGNED NOT NULL DEFAULT 0 ,
+`expire`  int(10) UNSIGNED NOT NULL DEFAULT 0 ,
+`createtime`  int(10) UNSIGNED NOT NULL DEFAULT 0 ,
+`creator`  varchar(32) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '' ,
+`lastoperate`  int(10) UNSIGNED NOT NULL DEFAULT 0 ,
+`lastoperator`  varchar(32) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '' ,
+PRIMARY KEY (`id`),
+UNIQUE INDEX `ip` (`ip`) USING BTREE
+)
+ENGINE=myisam charset utf8;
+
+# 登陆日志表
+CREATE TABLE if not exists `blog_loginlogs` (
+`id`  int(10) UNSIGNED NOT NULL AUTO_INCREMENT ,
+`username`  varchar(32) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '' ,
+`logintime`  int(10) UNSIGNED NOT NULL DEFAULT 0 ,
+`loginip`  int(10) UNSIGNED NOT NULL DEFAULT 0 ,
+`status`  tinyint(1) UNSIGNED NOT NULL DEFAULT 0 ,
+`cause`  varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '' ,
+`type`  tinyint(1) UNSIGNED NOT NULL DEFAULT 0 ,
+`origin`  tinyint(1) UNSIGNED NOT NULL DEFAULT 0 ,
+`agent`  varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '' ,
+PRIMARY KEY (`id`)
+)
+ENGINE=myisam charset utf8;
+
+# 黑名单列表
+CREATE TABLE if not exists `blog_blacklists` (
+`id`  int(10) UNSIGNED NOT NULL AUTO_INCREMENT ,
+`uid`  int(10) UNSIGNED NOT NULL DEFAULT 0 ,
+`username`  varchar(32) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '' ,
+`type`  tinyint(1) UNSIGNED NOT NULL DEFAULT 0 ,
+`cause`  varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '' ,
+`createtime`  int(10) UNSIGNED NOT NULL DEFAULT 0 ,
+`creator`  varchar(32) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '' ,
+`lastoperate`  int(10) UNSIGNED NOT NULL DEFAULT 0 ,
+`lastoperator`  varchar(32) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '' ,
+PRIMARY KEY (`id`),
+UNIQUE INDEX `user_type` (`uid`, `type`) USING BTREE
+)
+ENGINE=myisam charset utf8;
+
+# 用户留言表
+CREATE TABLE if not exists `blog_msgs` (
+`id`  int(10) UNSIGNED NOT NULL AUTO_INCREMENT ,
+`uid`  int(10) UNSIGNED NOT NULL DEFAULT 0 ,
+`username`  varchar(32) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '' ,
+`content`  text CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL ,
+`replytime`  int(10) UNSIGNED NOT NULL DEFAULT 0 ,
+`replyid`  int(10) UNSIGNED NOT NULL DEFAULT 0 ,
+`replyname`  varchar(32) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '' ,
+`isreply`  tinyint(1) UNSIGNED NOT NULL DEFAULT 0 ,
+`reply`  varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '' ,
+`status`  tinyint(1) UNSIGNED NOT NULL DEFAULT 0 ,
+`createtime`  int(10) UNSIGNED NOT NULL DEFAULT 0 ,
+`creator`  varchar(32) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '' ,
+`lastoperate`  int(10) UNSIGNED NOT NULL DEFAULT 0 ,
+`lastoperator`  varchar(32) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '' ,
+PRIMARY KEY (`id`)
+)
+ENGINE=myisam charset utf8;
+
+# 广告表
+CREATE TABLE if not exists `blog_adverts` (
+`id`  int(10) UNSIGNED NOT NULL AUTO_INCREMENT ,
+`name`  varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '' ,
+`cover`  varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '' ,
+`url`  varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '' ,
+`spot`  tinyint(1) UNSIGNED NOT NULL DEFAULT 0 ,
+`price`  float(5,2) UNSIGNED NOT NULL DEFAULT 0.00 ,
+`pricetype`  tinyint(1) UNSIGNED NOT NULL DEFAULT 0 ,
+`starttime`  int(10) UNSIGNED NOT NULL DEFAULT 0 ,
+`endtime`  int(10) UNSIGNED NOT NULL DEFAULT 0 ,
+`status`  tinyint(1) UNSIGNED NOT NULL DEFAULT 0 ,
+`cause`  varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '' ,
+`createtime`  int(10) UNSIGNED NOT NULL DEFAULT 0 ,
+`creator`  varchar(32) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '' ,
+`lastoperate`  int(10) UNSIGNED NOT NULL DEFAULT 0 ,
+`lastoperator`  varchar(32) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '' ,
+PRIMARY KEY (`id`)
+)
+ENGINE=myisam charset utf8;
+
+# 友情链接表
+CREATE TABLE if not exists `blog_links` (
+`id`  int(10) UNSIGNED NOT NULL AUTO_INCREMENT ,
+`name`  varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '' ,
+`url`  varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '' ,
+`enabled`  tinyint(1) UNSIGNED NOT NULL DEFAULT 0 ,
+`displayorder`  tinyint(3) UNSIGNED NOT NULL DEFAULT 0 ,
+`createtime`  int(10) UNSIGNED NOT NULL DEFAULT 0 ,
+`creator`  varchar(32) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '' ,
+`lastoperate`  int(10) UNSIGNED NOT NULL DEFAULT 0 ,
+`lastoperator`  varchar(32) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '' ,
+PRIMARY KEY (`id`),
+UNIQUE INDEX `name` (`name`) USING BTREE
+)
+ENGINE=myisam charset utf8;
+
+# 分类表
+CREATE TABLE if not exists `blog_categorys` (
+`id`  int(10) UNSIGNED NOT NULL AUTO_INCREMENT ,
+`parentid`  int(10) UNSIGNED NOT NULL DEFAULT 0 ,
+`name`  varchar(32) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '' ,
+`level`  tinyint(1) UNSIGNED NOT NULL DEFAULT 0 ,
+`enabled`  tinyint(1) UNSIGNED NOT NULL DEFAULT 0 ,
+`type`  tinyint(1) UNSIGNED NOT NULL DEFAULT 0 ,
+`displayorder`  tinyint(3) UNSIGNED NOT NULL DEFAULT 0 ,
+`createtime`  int(10) UNSIGNED NOT NULL DEFAULT 0 ,
+`creator`  varchar(32) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '' ,
+`lastoperate`  int(10) UNSIGNED NOT NULL DEFAULT 0 ,
+`lastoperator`  varchar(32) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '' ,
+PRIMARY KEY (`id`),
+UNIQUE INDEX `name_type` (`name`, `type`) USING BTREE
+)
+ENGINE=myisam charset utf8;
+
+# 相册表
+CREATE TABLE if not exists `blog_albums` (
+`id`  int(10) UNSIGNED NOT NULL AUTO_INCREMENT ,
+`name`  varchar(32) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '' ,
+`cover`  varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '' ,
+`photos`  smallint(5) UNSIGNED NOT NULL DEFAULT 0 ,
+`enabled`  tinyint(1) UNSIGNED NOT NULL DEFAULT 0 ,
+`displayorder`  tinyint(3) UNSIGNED NOT NULL DEFAULT 0 ,
+`createtime`  int(10) UNSIGNED NOT NULL DEFAULT 0 ,
+`creator`  varchar(32) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '' ,
+`lastoperate`  int(10) UNSIGNED NOT NULL DEFAULT 0 ,
+`lastoperator`  varchar(32) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '' ,
+PRIMARY KEY (`id`),
+UNIQUE INDEX `name` (`name`) USING BTREE
+)
+ENGINE=myisam charset utf8;
+
+# 相片表
+CREATE TABLE if not exists `blog_photos` (
+`id`  int(10) UNSIGNED NOT NULL AUTO_INCREMENT ,
+`albumid`  int(10) UNSIGNED NOT NULL DEFAULT 0 ,
+`name`  varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '' ,
+`url`  varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '' ,
+`description`  varchar(500) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '' ,
+`liked`  int(10) UNSIGNED NOT NULL DEFAULT 0 ,
+`click`  int(10) UNSIGNED NOT NULL DEFAULT 0 ,
+`createtime`  int(10) UNSIGNED NOT NULL DEFAULT 0 ,
+`creator`  varchar(32) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '' ,
+`lastoperate`  int(10) UNSIGNED NOT NULL DEFAULT 0 ,
+`lastoperator`  varchar(32) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '' ,
+PRIMARY KEY (`id`),
+INDEX `album_name` (`albumid`, `name`) USING BTREE
+)
+ENGINE=myisam charset utf8;
+
+# 公告表
+CREATE TABLE if not exists `blog_notices` (
+`id`  int(10) UNSIGNED NOT NULL AUTO_INCREMENT ,
+`title`  varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '' ,
+`content`  text CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL ,
+`sendid`  int(10) UNSIGNED NOT NULL DEFAULT 0 ,
+`sendname`  varchar(32) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '' ,
+`status`  tinyint(1) UNSIGNED NOT NULL DEFAULT 0 ,
+`showtime`  int(10) UNSIGNED NOT NULL DEFAULT 0 ,
+`createtime`  int(10) UNSIGNED NOT NULL DEFAULT 0 ,
+`creator`  varchar(32) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '' ,
+`lastoperate`  int(10) UNSIGNED NOT NULL DEFAULT 0 ,
+`lastoperator`  varchar(32) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '' ,
+PRIMARY KEY (`id`)
+)
+ENGINE=myisam charset utf8;
+
+# 标签表
+CREATE TABLE if not exists `blog_tags` (
+`id`  int(10) UNSIGNED NOT NULL AUTO_INCREMENT ,
+`name`  varchar(32) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '' ,
+`enabled`  tinyint(1) UNSIGNED NOT NULL DEFAULT 0 ,
+`createtime`  int(10) UNSIGNED NOT NULL DEFAULT 0 ,
+`creator`  varchar(32) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '' ,
+`lastoperate`  int(10) UNSIGNED NOT NULL DEFAULT 0 ,
+`lastoperator`  varchar(32) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '' ,
+PRIMARY KEY (`id`),
+UNIQUE INDEX `name` (`name`) USING BTREE
+)
+ENGINE=myisam charset utf8;
+
+# 文章评论表
+CREATE TABLE if not exists `blog_comments` (
+`id`  int(10) UNSIGNED NOT NULL AUTO_INCREMENT ,
+`articleid`  int(10) UNSIGNED NOT NULL DEFAULT 0 ,
+`uid`  int(10) UNSIGNED NOT NULL DEFAULT 0 ,
+`content`  varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '' ,
+`istop`  tinyint(1) UNSIGNED NOT NULL DEFAULT 0 ,
+`isshow`  tinyint(1) UNSIGNED NOT NULL DEFAULT 0 ,
+`createtime`  int(10) UNSIGNED NOT NULL DEFAULT 0 ,
+`creator`  varchar(32) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '' ,
+`lastoperate`  int(10) UNSIGNED NOT NULL DEFAULT 0 ,
+`lastoperator`  varchar(32) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '' ,
+PRIMARY KEY (`id`),
+INDEX `article_user_top_show` (`articleid`, `uid`, `istop`, `isshow`) USING BTREE
+)
+ENGINE=myisam charset utf8;
+
+# 评论回复表
+CREATE TABLE if not exists `blog_comment_replys` (
+`id`  int(10) UNSIGNED NOT NULL AUTO_INCREMENT ,
+`commentid`  int(10) UNSIGNED NOT NULL DEFAULT 0 ,
+`uid`  int(10) UNSIGNED NOT NULL DEFAULT 0 ,
+`content`  varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '' ,
+`isshow`  tinyint(1) UNSIGNED NOT NULL DEFAULT 0 ,
+`createtime`  int(10) UNSIGNED NOT NULL DEFAULT 0 ,
+`creator`  varchar(32) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '' ,
+`lastoperate`  int(10) UNSIGNED NOT NULL DEFAULT 0 ,
+`lastoperator`  varchar(32) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '' ,
+PRIMARY KEY (`id`)
+)
+ENGINE=myisam charset utf8;
+
+# 文章表
+CREATE TABLE  if not exists `blog_articles` (
+`id`  int(10) UNSIGNED NOT NULL AUTO_INCREMENT ,
+`menuid`  int(10) UNSIGNED NOT NULL DEFAULT 0 ,
+`categoryid`  int(10) UNSIGNED NOT NULL DEFAULT 0 ,
+`cover`  varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '' ,
+`title`  varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '' ,
+`content`  text CHARACTER SET utf8 COLLATE utf8_general_ci NULL ,
+`come`  varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '' ,
+`ispublic`  tinyint(1) UNSIGNED NOT NULL DEFAULT 0 ,
+`status`  tinyint(1) UNSIGNED NOT NULL DEFAULT 0 ,
+`author`  varchar(32) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '' ,
+`visitcount`  smallint(5) UNSIGNED NOT NULL DEFAULT 0 ,
+`commentcount`  smallint(5) UNSIGNED NOT NULL DEFAULT 0 ,
+`downloadcount`  smallint(5) UNSIGNED NOT NULL DEFAULT 0 ,
+`iscomment`  tinyint(1) UNSIGNED NOT NULL DEFAULT 0 ,
+`attachment`  varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '' ,
+`coin`  tinyint(3) UNSIGNED NOT NULL DEFAULT 0 ,
+`createtime`  int(10) UNSIGNED NOT NULL DEFAULT 0 ,
+`creator`  varchar(32) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '' ,
+`lastoperate`  int(10) UNSIGNED NOT NULL DEFAULT 0 ,
+`lastoperator`  varchar(32) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '' ,
+PRIMARY KEY (`id`),
+INDEX `menu_category_ispublic_status_title` (`menuid`, `categoryid`, `ispublic`, `status`, `title`) USING BTREE
+)
+ENGINE=myisam charset utf8;
+
+# 文章标签表
+CREATE TABLE if not exists `blog_article_tags` (
+`id`  int(10) UNSIGNED NOT NULL AUTO_INCREMENT ,
+`articleid`  int(10) UNSIGNED NOT NULL DEFAULT 0 ,
+`tagid`  int(10) UNSIGNED NOT NULL DEFAULT 0 ,
+`createtime`  int(10) UNSIGNED NOT NULL DEFAULT 0 ,
+`creator`  varchar(32) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '' ,
+`lastoperate`  int(10) UNSIGNED NOT NULL DEFAULT 0 ,
+`lastoperator`  varchar(32) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '' ,
+PRIMARY KEY (`id`),
+UNIQUE INDEX `artice_tag` (`articleid`, `tagid`) USING BTREE
+)
+ENGINE=myisam charset utf8;

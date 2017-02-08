@@ -1,0 +1,114 @@
+{% include "header.phtml" %}
+</ul>
+<ul class="operator">
+    {% if isCreateBut %}<li class="click"><span><img src="{{static_url('assets')}}/images/t02.png" /></span><a href="{{url('/ip/create')}}/navid/{{navId}}">添加</a></li>{% endif %}
+    {% if isBatchDeleteBut %}<li id="batchdelbut"><span><img src="{{static_url('assets')}}/images/t03.png" /></span>批量删除</li>{% endif %}
+    <li class="click"><span><img src="{{static_url('assets')}}/images/t04.png" /></span><a href="{{url('/ip/list')}}{{cond}}">刷新</a></li>
+</ul>
+</div>
+<div class="rightinfo">
+    <div class="tools">
+        <form action="{{url('ip/list')}}" method="post">
+            <ul class="search">
+                <li><label for="ip">IP</label><b>:</b><input type="text" value="{{ip}}" name="ip" id="ip" style="width: 100px;"/></li>
+                <li><label for="starttime">开始时间</label><b>:</b><input type="text" value="{{startTime}}" name="starttime" id="starttime" style="width: 65px;"/></li>
+                <li><label for="endtime">结束时间</label><b>:</b><input type="text" value="{{endTime}}" name="endtime" id="endtime" style="width: 65px;"/></li>
+                <li><input type="hidden" name="navid" value="{{navId}}"/><input type="submit" value="搜索" id="formbut" class="search-but"/></li>
+            </ul>
+        </form>
+    </div>
+    <table class="tablelist">
+        <thead>
+        <tr>
+            <th><input name="" type="checkbox" value="" class="checkbut"/></th>
+            <th>序号</th>
+            <th>ID</th>
+            <th>限制IP</th>
+            <th>过期时间</th>
+            <th>允许访问</th>
+            <th>添加时间</th>
+            <th>添加者</th>
+            <th>最后操作时间</th>
+            <th>最后操作者</th>
+            <th>操作</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for index,ip in ips %}
+        <tr>
+            <td><input name="checkinput" type="checkbox"  class="checkinput" value="{{ip['id']}}" /></td>
+            <td>{{index+1}}</td>
+            <td>{{ip['id']}}</td>
+            <td>{{ip['ip']}}</td>
+            <td>{{ip['expire']}}</td>
+            <td>{{ip['enabled']}}</td>
+            <td>{{ip['createtime']}}</td>
+            <td>{{ip['creator']}}</td>
+            <td>{{ip['lastoperate']}}</td>
+            <td>{{ip['lastoperator']}}</td>
+            <td>{% if isUpdateBut %}<a href="{{url('/ip/edit')}}{{cond}}/page/{{page['page']}}/id/{{ip['id']}}" class="tablelink">编辑</a>|{% endif %}
+                {% if isDeleteBut %}<a href="{{url('/ip/delete')}}{{cond}}/id/{{ip['id']}}" class="tablelink"> 删除</a></td>{% endif %}
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    <div class="pagin">
+        {% if page['num'] %}
+        <div class="message">共<i class="blue">{{page['total']}}</i>条记录，当前显示第&nbsp;<i class="blue">{{page['page']}}&nbsp;</i>页</div>
+        <ul class="paginList">
+            <li class="paginItem"><a href="{{url('/ip/list/page/')}}{{page['before']}}{{cond}}"><span class="pagepre"></span></a></li>
+            {% for index in 1..page['num'] %}
+            {% if page['page'] == index %}
+            <li class="paginItem current"><a href="{{url('/ip/list/page/')}}{{index}}{{cond}}">{{index}}</a></li>
+            {% else %}
+            <li class="paginItem"><a href="{{url('/ip/list/page/')}}{{index}}{{cond}}">{{index}}</a></li>
+            {% endif %}
+            {% endfor %}
+            <li class="paginItem"><a href="{{url('/ip/list/page/')}}{{page['next']}}{{cond}}"><span class="pagenxt"></span></a></li>
+        </ul>
+        {% else %}
+        <p align="center">暂无记录...</p>
+        {% endif %}
+    </div>
+</div>
+<script type="text/javascript" src="{{static_url('assets')}}/js/jquery.js"></script>
+<script type="text/javascript" src="{{static_url('assets')}}/js/jquery.date.js"></script>
+<script type="text/javascript">
+    $(function(){
+        $('.tablelist tbody tr:odd').addClass('odd');
+        $('#starttime').date_input();
+        $('#endtime').date_input();
+        $('#formbut').click(function(){
+            var stime = $('#starttime').val();
+            var etime = $('#endtime').val();
+            if( stime && etime){
+                stime = Date.parse(new Date(stime)) / 1000;
+                etime = Date.parse(new Date(etime)) / 1000;
+                if(stime > etime){
+                    alert('结束时间必须大于开始时间');
+                    return false;
+                }
+            }
+            return true;
+        });
+
+        $('.checkbut').click(function(){
+            $('.checkinput').attr("checked",$(this).is(':checked'));
+        });
+
+        $('#batchdelbut').click(function(){
+            var ids = '';
+
+            $(".checkinput:checked").each(function(i, n){
+                ids += $(this).val() + ',';
+            });
+
+            if(!ids){
+                alert('请先选择需要删除的IP信息!');
+            }else{
+                location.href = '/ip/delete/{{cond}}/id/' + ids;
+            }
+        })
+    });
+</script>
+{% include "footer.phtml" %}

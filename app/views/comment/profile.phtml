@@ -1,0 +1,12 @@
+{% include "header.phtml" %}
+        <li><a href="{{url('comment/profile')}}/id/{{id}}{{cond}}">评论信息</a></li>
+    </ul>
+</div>
+<div class="formbody">
+    <ul class="forminfo">
+        <li><label for="title">文章标题</label><input id="title" name="title" value="{{title}}" disabled="disabled" type="text" class="dfinput" /></li>
+        <li><label for="content">评论内容</label><textarea class="dfinput" style="height: 180px;resize: none;" disabled="disabled">{{content}}</textarea></li>
+        <li><label for="name">评论人</label><input id="name" name="name" value="{{name}}" disabled="disabled" type="text" class="dfinput" /></li>
+    </ul>
+</div>
+{% include "footer.phtml" %}

@@ -1,0 +1,51 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>禹译后台管理系统</title>
+<link href="{{static_url('assets')}}/css/style.css" rel="stylesheet" type="text/css" />
+</head>
+<body class="login-body">
+<div id="mainBody"><div id="cloud1" class="cloud"></div><div id="cloud2" class="cloud"></div></div>
+<div class="logintop">
+    <span>欢迎登录禹译后台管理平台</span>
+    <ul><li><a href="http://www.yuyinet.cn" target="_blank">网站首页</a></li></ul>
+</div>
+<div class="loginbody">
+    <span class="systemlogo"></span>
+    <div class="loginbox">
+        <form action="{{url('auth/postlogin')}}" method="post" id="loginform">
+            <ul class="relative">
+                <li class="login-error-notice" id="error-notice"></li>
+                <li><input name="username" type="text" class="loginuser" id="loginuser" value=""/></li>
+                <li><input name="password" type="password" class="loginpwd" id="loginpwd" value=""/></li>
+                <li><input name="" type="submit" class="loginbtn" value="登录"/><label class="pointer"><input name="remember" class="pointer" type="checkbox" value="1" checked="checked" />记住密码</label><label><a href="javascript:alert('抱歉! 该功能暂不可用');">忘记密码？</a></label></li>
+            </ul>
+        </form>
+    </div>
+</div>
+<div class="loginbm">&copy;copyright 2016 版权所有 禹译网后台专用管理系统界面</div>
+<script language="JavaScript" src="{{static_url('assets')}}/js/jquery.js"></script>
+<script src="{{static_url('assets')}}/js/cloud.js" type="text/javascript"></script>
+<script language="javascript">
+    $(function(){
+        $('.loginbox').css({'position':'absolute','left':($(window).width()-692)/2});
+        $(window).resize(function(){
+            $('.loginbox').css({'position':'absolute','left':($(window).width()-692)/2});
+        });
+        $('#loginform').submit(function(){
+            var errorNotice = $('#error-notice');
+            if('' == $('#loginuser').val()){
+                errorNotice.html('用户名不能为空');
+                return false;
+            }
+            if('' == $('#loginpwd').val()){
+                errorNotice.html('登录密码不能为空');
+                return false;
+            }
+            return true;
+        });
+    });
+</script>
+</body>
+</html>

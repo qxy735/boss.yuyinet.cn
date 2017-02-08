@@ -1,0 +1,135 @@
+{% include "header.phtml" %}
+        <li><a href="{{url('sonmenu/list')}}/parentid/{{parentId}}{{curcond}}">子菜单</a>({{topMenuName}})</li>
+    </ul>
+<ul class="operator">
+    {% if isBatchDeleteBut %}<li id="batchdelbut"><span><img src="{{static_url('assets')}}/images/t03.png" /></span>批量删除</li>{% endif %}
+    <li><span><img src="{{static_url('assets')}}/images/t04.png" /></span><a href="{{url('sonmenu/list')}}/parentid/{{parentId}}{{curcond}}">刷新</a></li>
+</ul>
+</div>
+<div class="rightinfo">
+    <div class="tools">
+        <form action="{{url('sonmenu/list')}}/parentid/{{parentId}}" method="post">
+        <ul class="search">
+            <li><label for="name">名称</label><b>:</b><input type="text" value="{{name}}" name="name" id="name"/></li>
+            <li><label for="code">code</label><b>:</b><input type="text" value="{{code}}" name="code" id="code"/></li>
+            <li><label for="type">类型</label><b>:</b>
+                <select id="type" name="type">
+                    <option value="-1">全部</option>
+                    {% for index,menuType in menuTypes %}
+                        <option value="{{index}}" {% if index == type %}selected{% endif %}>{{menuType}}</option>
+                    {% endfor %}
+                </select>
+            </li>
+            <li><label for="enabled">是否启用</label><b>:</b>
+                <select id="enabled" name="enabled">
+                    <option value="-1">全部</option>
+                    {% for index,enable in enables %}
+                        <option value="{{index}}" {% if index == enabled %}selected{% endif %}>{{enable}}</option>
+                    {% endfor %}
+                </select>
+            </li>
+            <li><input type="hidden" name="navid" value="{{navId}}"><input type="submit" value="搜索" class="search-but"/></li>
+        </ul>
+        </form>
+    </div>
+    <table class="tablelist">
+        <thead>
+        <tr>
+            <th><input name="" type="checkbox" value="" class="checkbut"/></th>
+            <th>序号</th>
+            <th>ID</th>
+            <th>名称</th>
+            <th>code</th>
+            <th>应用地址</th>
+            <th>权限</th>
+            <th>类型</th>
+            <th>是否启用</th>
+            <th>排序值</th>
+            <th>操作</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for index,menu in menus %}
+        <tr>
+            <td><input name="menuid"  class="checkinput" type="checkbox" value="{{menu['id']}}" /></td>
+            <td>{{index + 1}}</td>
+            <td>{{menu['id']}}</td>
+            <td >{{menu['name']}}</td>
+            <td>{{menu['code']}}</td>
+            <td>{{menu['url']}}</td>
+            <td>{{menu['auth']}}</td>
+            <td>{{menu['typename']}}</td>
+            <td>{{menu['enablename']}}</td>
+            <td>{{menu['displayorder']}}</td>
+            <td>
+                {% if isUpdateBut %}<a href="{{url('/sonmenu/edit')}}/parentid/{{parentId}}/id/{{menu['id']}}/page/{{page['page']}}{{curcond}}" class="tablelink">编辑</a>|{% endif %}
+                {% if isDeleteBut %}<a href="{{url('/sonmenu/delete/parentid/')}}{{parentId}}/id/{{menu['id']}}{{curcond}}" class="tablelink">删除</a>|{% endif %}
+            {% if isSetBut %}
+            {% if menu['enabled'] %}
+                <a href="{{url('/sonmenu/disabled')}}/parentid/{{parentId}}/id/{{menu['id']}}/page/{{page['page']}}{{curcond}}" class="tablelink">禁用</a>
+            {% else %}
+                <a href="{{url('/sonmenu/enabled')}}/parentid/{{parentId}}/id/{{menu['id']}}/page/{{page['page']}}{{curcond}}" class="tablelink">启用</a>
+            {% endif %}
+            {% endif %}
+            </td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    <div class="pagin">
+        {% if page['num'] %}
+        <div class="message">共<i class="blue">{{page['total']}}</i>条记录，当前显示第&nbsp;<i class="blue">{{page['page']}}&nbsp;</i>页</div>
+        <ul class="paginList">
+            <li class="paginItem"><a href="{{url('/sonmenu/list/parentid/')}}{{parentId}}/page/{{page['before']}}{{curcond}}"><span class="pagepre"></span></a></li>
+            {% for index in 1..page['num'] %}
+                {% if page['page'] == index %}
+                    <li class="paginItem current"><a href="{{url('/sonmenu/list/parentid/')}}{{parentId}}/page/{{index}}{{curcond}}">{{index}}</a></li>
+                {% else %}
+                    <li class="paginItem"><a href="{{url('/sonmenu/list/parentid/')}}{{parentId}}/page/{{index}}{{curcond}}">{{index}}</a></li>
+                {% endif %}
+            {% endfor %}
+            <li class="paginItem"><a href="{{url('/sonmenu/list/parentid/')}}{{parentId}}/page/{{page['next']}}{{curcond}}"><span class="pagenxt"></span></a></li>
+        </ul>
+        {% else %}
+        <p align="center">暂无记录...</p>
+        {% endif %}
+    </div>
+</div>
+<script type="text/javascript" src="{{static_url('assets')}}/js/jquery.js"></script>
+<script type="text/javascript">
+    $(document).ready(function(){
+        $(".click").click(function(){
+            $(".tip").fadeIn(200);
+        });
+        $(".tiptop a").click(function(){
+            $(".tip").fadeOut(200);
+        });
+        $(".sure").click(function(){
+            $(".tip").fadeOut(100);
+        });
+        $(".cancel").click(function(){
+            $(".tip").fadeOut(100);
+        });
+
+        $('.checkbut').click(function(){
+            $('.checkinput').attr("checked",$(this).is(':checked'));
+        });
+
+        $('#batchdelbut').click(function(){
+            var ids = '';
+
+            $(".checkinput:checked").each(function(i, n){
+                ids += $(this).val() + ',';
+            });
+
+            if(!ids){
+                alert('请先选择需要删除的菜单!');
+            }else{
+                location.href = '/sonmenu/delete/parentid/{{parentId}}/{{curcond}}/id/' + ids;
+            }
+        })
+    });
+
+    $('.tablelist tbody tr:odd').addClass('odd');
+</script>
+{% include "footer.phtml" %}

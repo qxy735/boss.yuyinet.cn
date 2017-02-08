@@ -1,0 +1,47 @@
+{% include "header.phtml" %}
+        <li><a href="{{url('adminuser/profile')}}/id/{{user['id']}}{{cond}}">用户详情</a>{% if user %} ({{user['username']}}) {% endif %}</li>
+    </ul>
+</div>
+<div class="formbody">
+    <div class="homebase">
+        <h2>我的头像</h2>
+        <div>
+            {% if user['mavatar'] %}<img src="{{user['mavatar']}}" style="border-radius: 50%;border: 1px solid #eee;margin-left: 30px;"/>{% else %}暂无...{% endif %}
+        </div>
+    </div>
+    <div class="homebase">
+        <h2>基本资料</h2>
+        <div>
+            <label for="username">用户名: </label><input type="text" name="username" id="username" value="{{user['username']}}" disabled="disabled"/>
+            <label for="mobile">手机: </label><input type="text" name="mobile" id="mobile" value="{{profile['mobile']}}" disabled="disabled"/>
+            <label for="email">邮箱: </label><input type="text" name="email" id="email" value="{{profile['email']}}" disabled="disabled"/>
+            <label for="birthday">生日: </label><input type="text" name="birthday" id="birthday" value="{{profile['birthday']}}" disabled="disabled"/>
+        </div>
+        <div>
+            <label for="zodiac">星座: </label><input type="text" name="zodiac" id="zodiac" value="{{profile['zodiac']}}" disabled="disabled"/>
+            <label for="edu">学历: </label><input type="text" name="edu" id="edu" value="{{profile['edu']}}" disabled="disabled"/>
+            <label for="age">年龄: </label><input type="text" name="age" id="age" value="{{profile['age']}}" disabled="disabled"/>
+            <label for="sex">性别: </label><input type="text" name="sex" id="sex" value="{{profile['sex']}}" disabled="disabled"/>
+        </div>
+        <div>
+            <label for="happy">兴趣: </label><input type="text" name="happy" id="happy" value="{{profile['happy']}}" disabled="disabled"/>
+            <label for="address">地址: </label><input type="text" name="address" id="address" value="{{profile['address']}}" disabled="disabled" style="width: 300px;"/>
+        </div>
+    </div>
+    <div class="homebase">
+        <h2>其他信息</h2>
+        <div>
+            <label for="coin">禹译币: </label><input type="text" name="coin" id="coin" value="{{profile['coin']}}" disabled="disabled"/>
+            <label for="status">用户状态: </label><input type="text" name="status" id="status" value="{{user['status']}}" disabled="disabled"/>
+            <label for="type">用户类型: </label><input type="text" name="type" id="type" value="{{user['type']}}" disabled="disabled"/>
+        </div>
+        <div>
+            <label for="regip">注册IP: </label><input type="text" name="regip" id="regip" value="{{user['regip']}}" disabled="disabled"/>
+            <label for="regtime">注册时间: </label><input type="text" name="regtime" id="regtime" value="{{user['regtime']}}" disabled="disabled"/>
+            <label for="loginip">登陆IP: </label><input type="text" name="loginip" id="loginip" value="{{user['loginip']}}" disabled="disabled"/>
+            <label for="logintime">最近登陆时间: </label><input type="text" name="logintime" id="logintime" value="{{user['logintime']}}" disabled="disabled"/>
+            <input type="hidden" name="uid" value="{{user['id']}}"/>
+        </div>
+    </div>
+</div>
+{% include "footer.phtml" %}

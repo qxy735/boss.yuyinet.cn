@@ -1,0 +1,48 @@
+{% include "header.phtml" %}
+        <li><a href="{{url('adminuser/create')}}{{cond}}">添加用户</a></li>
+    </ul>
+</div>
+<div class="formbody">
+    <form action="{{url('adminuser/post')}}{{cond}}" method="post">
+        <ul class="forminfo">
+            <li>
+                <label for="status">用户状态</label>
+                <select name="status" id="status">
+                {% for index,name in status %}
+                    <option value="{{index}}">{{name}}</option>
+                {% endfor %}
+                </select>
+            </li>
+            <li><label for="username">用户名称</label><input id="username" name="username" value="" type="text" class="dfinput" /></li>
+            <li><label for="password">用户密码</label><input id="password" name="password" value="" type="password" class="dfinput" /></li>
+            <li><label for="repassword">确认密码</label><input id="repassword" name="repassword" value="" type="password" class="dfinput" /></li>
+            <li><label>&nbsp;</label><input name="" type="submit" class="btn" id="btn" value="确认保存"/><input style="margin-left: 68px;" name="" type="reset" class="btn" value="重置信息"/></li>
+        </ul>
+    </form>
+</div>
+<script type="text/javascript">
+    var btn = document.getElementById('btn');
+    btn.onclick = function(){
+        var username = document.getElementById('username');
+        var password = document.getElementById('password');
+        var repassword = document.getElementById('repassword');
+
+        if('' == username.value){
+            alert('用户名必填!');
+            return false;
+        }
+
+        if('' == password.value){
+            alert('密码必填!');
+            return false;
+        }
+
+        if(password.value != repassword.value){
+            alert('两次密码填写不一致!');
+            return false;
+        }
+
+        return true;
+    }
+</script>
+{% include "footer.phtml" %}

@@ -1,0 +1,57 @@
+{% include "header.phtml" %}
+<li><a href="{{url('home/sendbox')}}{{curcond}}">我的发信箱</a></li>
+<li><a href="{{url('home/posterlist')}}{{curcond}}">收信人列表</a></li>
+</ul>
+<ul class="operator">
+    <li class="click"><span><img src="{{static_url('assets')}}/images/t04.png" /></span><a href="{{url('/home/posterlist')}}{{curcond}}">刷新</a></li>
+</ul>
+</div>
+<div class="rightinfo">
+    <table class="tablelist">
+        <thead>
+        <tr>
+            <th>序号</th>
+            <th>收信人</th>
+            <th>是否已阅</th>
+            <th>收信时间</th>
+            <th>阅读时间</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for index,detail in details %}
+        <tr>
+            <td>{{index+1}}</td>
+            <td>{{detail['postname']}}</td>
+            <td>{{detail['isread']}}</td>
+            <td>{{detail['createtime']}}</td>
+            <td>{{detail['lastoperate']}}</td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    <div class="pagin">
+        {% if page['num'] %}
+        <div class="message">共<i class="blue">{{page['total']}}</i>条记录，当前显示第&nbsp;<i class="blue">{{page['page']}}&nbsp;</i>页</div>
+        <ul class="paginList">
+            <li class="paginItem"><a href="{{url('/home/posterlist/_page/')}}{{page['before']}}{{curcond}}"><span class="pagepre"></span></a></li>
+            {% for index in 1..page['num'] %}
+            {% if page['page'] == index %}
+            <li class="paginItem current"><a href="{{url('/home/posterlist/_page/')}}{{index}}{{curcond}}">{{index}}</a></li>
+            {% else %}
+            <li class="paginItem"><a href="{{url('/home/posterlist/_page/')}}{{index}}{{curcond}}">{{index}}</a></li>
+            {% endif %}
+            {% endfor %}
+            <li class="paginItem"><a href="{{url('/home/posterlist/_page/')}}{{page['next']}}{{curcond}}"><span class="pagenxt"></span></a></li>
+        </ul>
+        {% else %}
+        <p align="center">暂无记录...</p>
+        {% endif %}
+    </div>
+</div>
+<script type="text/javascript" src="{{static_url('assets')}}/js/jquery.js"></script>
+<script type="text/javascript">
+    $(function(){
+        $('.tablelist tbody tr:odd').addClass('odd');
+    });
+</script>
+{% include "footer.phtml" %}

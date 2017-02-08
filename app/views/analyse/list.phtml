@@ -1,0 +1,58 @@
+{% include "header.phtml" %}
+</ul>
+</div>
+<div class="rightinfo">
+    <div class="tools" style="float: left;">
+        <form action="{{url('analyse/list')}}" method="post">
+            <ul class="search">
+                <li><label for="option">分析项</label><b>:</b>
+                    <select id="option" name="option" style="width: 150px;">
+                        {% for index,optionName in options %}
+                        <option value="{{index}}" {% if index == option %}selected="selected"{% endif %}>{{optionName}}</option>
+                        {% endfor %}
+                    </select>
+                </li>
+                <li>
+                    <input type="hidden" name="navid" value="{{navId}}"/>
+                    <input type="submit" value="分析" style="width: 80px;cursor: pointer;"/>
+                </li>
+            </ul>
+        </form>
+    </div>
+    <div style="clear: both;border: 1px solid #dddddd;margin: 60px;padding: 30px;text-align: center;">
+        <canvas id="cvs" width="480" height="250" !style="border:1px solid #ccc">[浏览器版本过低,无法渲染分析结果]</canvas>
+    </div>
+</div>
+<script type="text/javascript" src="{{static_url('assets')}}/js/jquery.js"></script>
+<script src="{{static_url('assets')}}/graph/RGraph.common.core.js" ></script>
+<script src="{{static_url('assets')}}/graph/RGraph.common.tooltips.js" ></script>
+<script src="{{static_url('assets')}}/graph/RGraph.common.dynamic.js" ></script>
+<script src="{{static_url('assets')}}/graph/RGraph.pie.js" ></script>
+<!--[if lt IE 9]><script src="{{static_url('assets')}}/graph/excanvas.js"></script><![endif]-->
+<script type="text/javascript">
+    window.onload = function ()
+    {
+        var data = {{datas}};
+
+        var pie = new RGraph.Pie('cvs', data)
+            .Set('labels', {{lables}})
+            .Set('tooltips', {{tips}})
+            .Set('tooltips.event', 'onmousemove')
+            .Set('colors', {{colors}})
+            .Set('strokestyle', 'white')
+            .Set('linewidth', 3)
+            .Set('shadow', true)
+            .Set('shadow.offsetx', 2)
+            .Set('shadow.offsety', 2)
+            .Set('shadow.blur', 3)
+            .Set('exploded', 7)
+            .Set('title', '{{title}}')
+
+        for (var i=0; i<data.length; ++i) {
+            pie.Get('labels')[i] = pie.Get('labels')[i] + ' (' + data[i] + '%)';
+        }
+
+        pie.Draw();
+    }
+</script>
+{% include "footer.phtml" %}

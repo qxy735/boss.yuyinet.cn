@@ -1,0 +1,43 @@
+{% include "header.phtml" %}
+<li><a href="{{url('msgtype/edit')}}/id/{{msgType['id']}}{{cond}}">编辑消息类型</a></li>
+</ul>
+</div>
+<div class="formbody">
+    <form action="{{url('msgtype/save')}}{{cond}}" method="post">
+        <ul class="forminfo">
+            <li>
+                <label for="enabled">是否启用</label>
+                <select name="enabled" id="enabled">
+                    {% for index,name in enableds %}
+                    <option value="{{index}}" {% if index == msgType['enabled'] %}selected="selected"{% endif %}>{{name}}</option>
+                    {% endfor %}
+                </select>
+                {% for index,econd in conds %}
+                <input type="hidden" name="{{index}}" value="{{econd}}"/>
+                {% endfor %}
+            </li>
+            <li>
+                <label for="ispublic">是否公开</label>
+                <select name="ispublic" id="ispublic">
+                    {% for index,name in publics %}
+                    <option value="{{index}}" {% if index == msgType['ispublic'] %}selected="selected"{% endif %}>{{name}}</option>
+                    {% endfor %}
+                </select>
+            </li>
+            <li><label for="name">类型名称</label><input id="name" name="name" value="{{msgType['name']}}" type="text" class="dfinput" /></li>
+            <li><label>&nbsp;</label><input type="hidden" name="id" value="{{msgType['id']}}"/><input name="" type="submit" class="btn" id="btn" value="确认保存"/><input style="margin-left: 68px;" name="" type="reset" class="btn" value="重置信息"/></li>
+        </ul>
+    </form>
+</div>
+<script type="text/javascript">
+    var btn = document.getElementById('btn');
+    btn.onclick = function(){
+        var name = document.getElementById('name');
+        if('' == name.value){
+            alert('消息类型名称必填!');
+            return false;
+        }
+        return true;
+    }
+</script>
+{% include "footer.phtml" %}

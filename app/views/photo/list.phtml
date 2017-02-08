@@ -1,0 +1,90 @@
+{% include "header.phtml" %}
+<li><a href="{{url('photo/list')}}{{curcond}}">相片管理</a> {% if albumName %}({{albumName}}){% endif %}</li>
+    </ul>
+<ul class="operator">
+    {% if isCreateBut %}<li><span><img src="{{static_url('assets')}}/images/t01.png" /></span><a href="{{url('photo/create')}}{{curcond}}">添加相片</a></li>{% endif %}
+    {% if isBatchDeleteBut %}<li id="batchdelbut"><span><img src="{{static_url('assets')}}/images/t03.png" /></span>批量删除</li>{% endif %}
+    <li><span><img src="{{static_url('assets')}}/images/t04.png" /></span><a href="{{url('photo/list')}}{{curcond}}">刷新</a></li>
+</ul>
+</div>
+<div class="rightinfo">
+    <table class="tablelist">
+        <thead>
+        <tr>
+            <th><input name="" type="checkbox" value="" class="checkbut"/></th>
+            <th>序号</th>
+            <th>相片ID</th>
+            <th>名称</th>
+            <th>相片</th>
+            <th>点赞数</th>
+            <th>访问量</th>
+            <th>添加者</th>
+            <th>添加时间</th>
+            <th>最后操作者</th>
+            <th>操作</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for index,photo in photos %}
+        <tr>
+            <td><input name="id"  class="checkinput" type="checkbox" value="{{photo['id']}}" /></td>
+            <td>{{index+1}}</td>
+            <td>{{photo['id']}}</td>
+            <td>{{photo['name']}}</td>
+            <td>{% if photo['url'] %}<img src="{{photo['url']}}" height="50"/>{% endif %}</td>
+            <td>{{photo['liked']}}</td>
+            <td>{{photo['click']}}</td>
+            <td>{{photo['creator']}}</td>
+            <td>{{photo['createtime']}}</td>
+            <td>{{photo['lastoperator']}}</td>
+            <td>
+                {% if isUpdateBut %}<a href="{{url('/photo/edit')}}/id/{{photo['id']}}/_page/{{page['page']}}{{curcond}}" class="tablelink">编辑</a>{% endif %}
+                {% if isDeleteBut %}|<a href="{{url('/photo/delete')}}/id/{{photo['id']}}/{{curcond}}" class="tablelink">删除</a>
+                {% endif %}
+            </td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    <div class="pagin">
+        {% if page['num'] %}
+        <div class="message">共<i class="blue">{{page['total']}}</i>条记录，当前显示第&nbsp;<i class="blue">{{page['page']}}&nbsp;</i>页</div>
+        <ul class="paginList">
+            <li class="paginItem"><a href="{{url('/photo/list/_page/')}}{{page['before']}}{{curcond}}"><span class="pagepre"></span></a></li>
+            {% for index in 1..page['num'] %}
+            {% if page['page'] == index %}
+            <li class="paginItem current"><a href="{{url('/photo/list/_page/')}}{{index}}{{curcond}}">{{index}}</a></li>
+            {% else %}
+            <li class="paginItem"><a href="{{url('/photo/list/_page/')}}{{index}}{{curcond}}">{{index}}</a></li>
+            {% endif %}
+            {% endfor %}
+            <li class="paginItem"><a href="{{url('/photo/list/_page/')}}{{page['next']}}{{curcond}}"><span class="pagenxt"></span></a></li>
+        </ul>
+        {% else %}
+        <p align="center">暂无记录...</p>
+        {% endif %}
+    </div>
+</div>
+<script type="text/javascript" src="{{static_url('assets')}}/js/jquery.js"></script>
+<script type="text/javascript">
+    $(document).ready(function(){
+        $('.checkbut').click(function(){
+            $('.checkinput').attr("checked",$(this).is(':checked'));
+        });
+        $('#batchdelbut').click(function(){
+            var ids = '';
+
+            $(".checkinput:checked").each(function(i, n){
+                ids += $(this).val() + ',';
+            });
+
+            if(!ids){
+                alert('请先选择需要删除的相片!');
+            }else{
+                location.href = '/photo/delete/{{curcond}}/id/' + ids;
+            }
+        })
+    });
+    $('.tablelist tbody tr:odd').addClass('odd');
+</script>
+{% include "footer.phtml" %}

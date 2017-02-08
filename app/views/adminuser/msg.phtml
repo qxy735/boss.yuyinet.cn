@@ -1,0 +1,57 @@
+{% include "header.phtml" %}
+<li><a href="{{url('adminuser/msg')}}/uid/{{user['id']}}{{cond}}">发消息</a></li>
+</ul>
+</div>
+<div class="formbody">
+    <form action="{{url('adminuser/sendmsg')}}{{cond}}" method="post" id="myform">
+        <ul class="forminfo">
+            <li><label for="typeid">消息类型</label><select id="typeid" name="typeid">
+                    <option value="0">默认类别</option>
+                    {% for msgType in msgTypes %}
+                    <option value="{{msgType['id']}}">{{msgType['name']}}</option>
+                    {% endfor %}
+                </select></li>
+            <li><label for="poster">接收对象</label><input type="text" class="dfinput" disabled="disabled" value="{{user['username']}}"></li>
+            <li><label for="title">消息标题</label><input id="title" name="title" value="" type="text" class="dfinput" /></li>
+            <li><label for="content">消息内容</label></li>
+            <li style="padding-left: 85px;"><script type="text/plain" id="myEditor"></script></li>
+            <li><label>&nbsp;</label><input type="hidden" name="posterid" value="{{user['id']}}"><input name="" type="submit" id="btn" class="btn" value="确认保存"/><input style="margin-left: 68px;" name="" type="reset" class="btn" value="重置信息"/></li>
+        </ul>
+    </form>
+</div>
+<script type="text/javascript" src="{{static_url('assets')}}/js/jquery.js"></script>
+<script type="text/javascript" src="{{static_url('assets')}}/ueditor/third-party/jquery.min.js"></script>
+<script type="text/javascript" charset="utf-8" src="{{static_url('assets')}}/ueditor/umeditor.config.js"></script>
+<script type="text/javascript" charset="utf-8" src="{{static_url('assets')}}/ueditor/umeditor.min.js"></script>
+<script type="text/javascript" src="{{static_url('assets')}}/ueditor/lang/zh-cn/zh-cn.js"></script>
+<script type="text/javascript">
+    $(document).ready(function(){
+        var um = UM.getEditor('myEditor',{
+            toolbar:[
+                'source | undo redo | bold italic underline strikethrough | forecolor backcolor',
+                'fontfamily fontsize' ,
+                'link unlink | emotion image',
+                '| fullscreen'
+            ],
+            zIndex: 0,
+            initialFrameHeight: 200,
+            initialFrameWidth: 345,
+            imageUrl:'{{uploadUrl}}'
+        });
+
+        $('#myform').submit(function(){
+            if(!$('#title').val()){
+                alert('消息标题不能为空!');
+
+                return false;
+            }
+            if(!$('#myEditor').text()){
+                alert('消息内容不能为空!');
+
+                return false;
+            }
+            return true;
+        });
+    });
+</script>
+{% include "footer.phtml" %}

@@ -1,0 +1,36 @@
+{% include "header.phtml" %}
+<li><a href="{{url('album/create')}}{{cond}}">添加相册</a></li>
+</ul>
+</div>
+<div class="formbody">
+    <form action="{{url('album/post')}}{{cond}}" method="post" enctype="multipart/form-data">
+        <ul class="forminfo">
+            <li>
+                <label for="enabled">是否启用</label>
+                <select name="enabled" id="enabled">
+                    {% for index,name in enableds %}
+                    <option value="{{index}}" {% if index == defaultEnabled %}selected="selected"{% endif %}>{{name}}</option>
+                    {% endfor %}
+                </select>
+            </li>
+            <li><label for="name">相册名称</label><input id="name" name="name" value="" type="text" class="dfinput" /></li>
+            <li><label for="cover">封面图片</label><input type="file" name="cover" id="cover" class="dfinput"/></li>
+            <li><label for="displayorder">排序值</label><input id="displayorder" name="displayorder" value="255" type="text" class="dfinput" /></li>
+            <li><label>&nbsp;</label><input name="" type="submit" class="btn" id="btn" value="确认保存"/><input style="margin-left: 68px;" name="" type="reset" class="btn" value="重置信息"/></li>
+        </ul>
+    </form>
+</div>
+<script type="text/javascript">
+    var btn = document.getElementById('btn');
+    btn.onclick = function(){
+        var name = document.getElementById('name');
+
+        if('' == name.value){
+            alert('相册名称必填!');
+            return false;
+        }
+
+        return true;
+    }
+</script>
+{% include "footer.phtml" %}

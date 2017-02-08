@@ -1,0 +1,14 @@
+<script type="text/javascript">
+    var links = document.links;
+    for(var i= 0,l=links.length; i < l; i++){
+        links[i].onclick = function(){
+            if(-1 == document.cookie.indexOf('admin_user=')){
+                parent.location.href = '/auth/login';
+                return false;
+            }
+            return true;
+        }
+    }
+</script>
+</body>
+</html>

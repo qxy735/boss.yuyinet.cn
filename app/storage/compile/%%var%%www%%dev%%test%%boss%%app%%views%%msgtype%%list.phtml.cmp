@@ -1,0 +1,153 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>禹译后台管理系统</title>
+    <link href="<?php echo $this->url->getStatic('assets'); ?>/css/style.css" rel="stylesheet" type="text/css" />
+    <link href="<?php echo $this->url->getStatic('assets'); ?>/ueditor/themes/default/css/umeditor.css" type="text/css" rel="stylesheet">
+</head>
+<body>
+<div class="place">
+    <span>位置：</span>
+    <ul class="placeul">
+        <li><a href="<?php echo $this->url->get('/'); ?>" target="_parent">首页</a></li>
+        <li><?php if ($navTopMenu) { ?><?php echo $navTopMenu['name']; ?><?php } else { ?>幽灵菜单<?php } ?></li>
+        <?php if ($navSonMenu) { ?>
+        <li><a href="<?php echo $navSonMenu['url']; ?><?php echo $cond; ?>"><?php echo $navSonMenu['name']; ?></a></li>
+        <?php } else { ?>
+        <li>幽灵菜单</a></li>
+        <?php } ?>
+</ul>
+<ul class="operator">
+    <?php if ($isCreateBut) { ?><li><span><img src="<?php echo $this->url->getStatic('assets'); ?>/images/t01.png" /></span><a href="<?php echo $this->url->get('msgtype/create'); ?><?php echo $cond; ?>">添加消息类型</a></li><?php } ?>
+    <?php if ($isBatchDeleteBut) { ?><li id="batchdelbut"><span><img src="<?php echo $this->url->getStatic('assets'); ?>/images/t03.png" /></span>批量删除</li><?php } ?>
+    <li><span><img src="<?php echo $this->url->getStatic('assets'); ?>/images/t04.png" /></span><a href="<?php echo $this->url->get('msgtype/list'); ?><?php echo $cond; ?>">刷新</a></li>
+</ul>
+</div>
+<div class="rightinfo">
+    <div class="tools">
+        <form action="<?php echo $this->url->get('msgtype/list'); ?>" method="post">
+            <ul class="search">
+                <li><label for="name">类型名称</label><b>:</b><input type="text" value="<?php echo $name; ?>" name="name" id="name"/></li>
+                <li><label for="enabled">是否启用</label><b>:</b>
+                    <select id="enabled" name="enabled">
+                        <option value="-1">全部</option>
+                        <?php foreach ($enableds as $index => $enableName) { ?>
+                        <option value="<?php echo $index; ?>" <?php if ($index == $enabled) { ?> selected="selected" <?php } ?>><?php echo $enableName; ?></option>
+                        <?php } ?>
+                    </select>
+                </li>
+                <li><label for="ispublic">是否公开</label><b>:</b>
+                    <select id="ispublic" name="ispublic">
+                        <option value="-1">全部</option>
+                        <?php foreach ($publics as $index => $publicName) { ?>
+                        <option value="<?php echo $index; ?>" <?php if ($index == $ispublic) { ?>selected="selected"<?php } ?>><?php echo $publicName; ?></option>
+                        <?php } ?>
+                    </select>
+                </li>
+                <li><input type="hidden" name="navid" value="<?php echo $navId; ?>"/><input type="submit" value="搜索" class="search-but"/></li>
+            </ul>
+        </form>
+    </div>
+    <table class="tablelist">
+        <thead>
+        <tr>
+            <th><input name="" type="checkbox" value="" class="checkbut"/></th>
+            <th>序号</th>
+            <th>ID</th>
+            <th>名称</th>
+            <th>是否启用</th>
+            <th>是否公开</th>
+            <th>添加者</th>
+            <th>添加时间</th>
+            <th>最后操作者</th>
+            <th>最后操作时间</th>
+            <th>操作</th>
+        </tr>
+        </thead>
+        <tbody>
+        <?php foreach ($msgTypes as $index => $msgType) { ?>
+        <tr>
+            <td><input name="id"  class="checkinput" type="checkbox" value="<?php echo $msgType['id']; ?>" /></td>
+            <td><?php echo $index + 1; ?></td>
+            <td><?php echo $msgType['id']; ?></td>
+            <td><?php echo $msgType['name']; ?></td>
+            <td><?php echo $msgType['enabledname']; ?></td>
+            <td><?php echo $msgType['ispublic']; ?></td>
+            <td><?php echo $msgType['creator']; ?></td>
+            <td><?php echo $msgType['createtime']; ?></td>
+            <td><?php echo $msgType['lastoperator']; ?></td>
+            <td><?php echo $msgType['lastoperate']; ?></td>
+            <td>
+                <?php if ($isUpdateBut) { ?><a href="<?php echo $this->url->get('/msgtype/edit'); ?>/id/<?php echo $msgType['id']; ?>/page/<?php echo $page['page']; ?><?php echo $cond; ?>" class="tablelink">编辑</a>|<?php } ?>
+                <?php if ($isSetBut) { ?>
+                <?php if ($disableValue == $msgType['enabled']) { ?>
+                <a href="<?php echo $this->url->get('/msgtype/enabled'); ?>/id/<?php echo $msgType['id']; ?>/page/<?php echo $page['page']; ?><?php echo $cond; ?>" class="tablelink">启用</a>|
+                <?php } else { ?>
+                <a href="<?php echo $this->url->get('/msgtype/disabled'); ?>/id/<?php echo $msgType['id']; ?>/page/<?php echo $page['page']; ?><?php echo $cond; ?>" class="tablelink">禁用</a>|
+                <?php } ?>
+                <?php } ?>
+                <?php if ($isDeleteBut) { ?><a href="<?php echo $this->url->get('/msgtype/delete'); ?>/id/<?php echo $msgType['id']; ?><?php echo $cond; ?>" class="tablelink">删除</a><?php } ?>
+            </td>
+        </tr>
+        <?php } ?>
+        </tbody>
+    </table>
+    <div class="pagin">
+        <?php if ($page['num']) { ?>
+        <div class="message">共<i class="blue"><?php echo $page['total']; ?></i>条记录，当前显示第&nbsp;<i class="blue"><?php echo $page['page']; ?>&nbsp;</i>页</div>
+        <ul class="paginList">
+            <li class="paginItem"><a href="<?php echo $this->url->get('/msgtype/list/page/'); ?><?php echo $page['before']; ?><?php echo $cond; ?>"><span class="pagepre"></span></a></li>
+            <?php foreach (range(1, $page['num']) as $index) { ?>
+            <?php if ($page['page'] == $index) { ?>
+            <li class="paginItem current"><a href="<?php echo $this->url->get('/msgtype/list/page/'); ?><?php echo $index; ?><?php echo $cond; ?>"><?php echo $index; ?></a></li>
+            <?php } else { ?>
+            <li class="paginItem"><a href="<?php echo $this->url->get('/msgtype/list/page/'); ?><?php echo $index; ?><?php echo $cond; ?>"><?php echo $index; ?></a></li>
+            <?php } ?>
+            <?php } ?>
+            <li class="paginItem"><a href="<?php echo $this->url->get('/msgtype/list/page/'); ?><?php echo $page['next']; ?><?php echo $cond; ?>"><span class="pagenxt"></span></a></li>
+        </ul>
+        <?php } else { ?>
+        <p align="center">暂无记录...</p>
+        <?php } ?>
+    </div>
+</div>
+<script type="text/javascript" src="<?php echo $this->url->getStatic('assets'); ?>/js/jquery.js"></script>
+<script type="text/javascript">
+    $(document).ready(function(){
+        $('.checkbut').click(function(){
+            $('.checkinput').attr("checked",$(this).is(':checked'));
+        });
+        $('#batchdelbut').click(function(){
+            var ids = '';
+
+            $(".checkinput:checked").each(function(i, n){
+                ids += $(this).val() + ',';
+            });
+
+            if(!ids){
+                alert('请先选择需要删除的消息类型!');
+            }else{
+                location.href = '/msgtype/delete/<?php echo $cond; ?>/id/' + ids;
+            }
+        })
+    });
+    $('.tablelist tbody tr:odd').addClass('odd');
+</script>
+<script type="text/javascript">
+    var links = document.links;
+
+    for(var i= 0,l=links.length; i < l; i++){
+        links[i].onclick = function(){
+            if(-1 == document.cookie.indexOf('admin_user=')){
+                parent.location.href = '/auth/login';
+
+                return false;
+            }
+
+            return true;
+        }
+    }
+</script>
+</body>
+</html>

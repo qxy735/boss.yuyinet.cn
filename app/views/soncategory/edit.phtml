@@ -1,0 +1,48 @@
+{% include "header.phtml" %}
+<li><a href="{{url('soncategory/list/parentid/')}}{{parentId}}{{curcond}}">子分类</a></li>
+<li><a href="{{url('soncategory/edit')}}/parentid/{{parentId}}/id/{{category['id']}}{{curcond}}">编辑分类信息</a></li>
+</ul>
+</div>
+<div class="formbody">
+    <form action="{{url('soncategory/save')}}{{curcond}}" method="post">
+        <ul class="forminfo">
+            <li>
+                <label for="parentid">分类归属</label>
+                <select name="parentid" id="parentid">
+                    <option value="0">顶级分类</option>
+                    {% for topCategory in categorys %}
+                    <option value="{{topCategory['id']}}" {% if topCategory['id'] == category['parentid'] %} selected = "selected" {% endif %}>{{topCategory['name']}}</option>
+                    {% endfor %}
+                </select>
+            </li>
+            <li>
+                <label for="enabled">是否启用</label>
+                <select name="enabled" id="enabled">
+                    {% for index,name in enableds %}
+                    <option value="{{index}}" {% if index == category['enabled'] %}selected='selected'{% endif %}>{{name}}</option>
+                    {% endfor %}
+                </select>
+                {% for index,econd in conds %}
+                <input type="hidden" name="{{index}}" value="{{econd}}"/>
+                {% endfor %}
+            </li>
+            <li><label for="name">分类名称</label><input id="name" name="name" value="{{category['name']}}" type="text" class="dfinput" /></li>
+            <li><label for="displayorder">排序值</label><input id="displayorder" name="displayorder" type="text" class="dfinput" value="{{category['displayorder']}}" /></li>
+            <li><label>&nbsp;</label><input type="hidden" name="parentid" value="{{parentId}}"/><input type="hidden" name="id" value="{{category['id']}}"/><input name="" type="submit" id="btn" class="btn" value="确认保存"/><input style="margin-left: 68px;" name="" type="reset" class="btn" value="重置信息"/></li>
+        </ul>
+    </form>
+</div>
+<script type="text/javascript">
+    var btn = document.getElementById('btn');
+    btn.onclick = function(){
+        var name = document.getElementById('name');
+
+        if('' == name.value){
+            alert('分类名称必填!');
+            return false;
+        }
+
+        return true;
+    }
+</script>
+{% include "footer.phtml" %}

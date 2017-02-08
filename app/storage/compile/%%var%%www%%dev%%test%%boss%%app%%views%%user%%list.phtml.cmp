@@ -1,0 +1,204 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>禹译后台管理系统</title>
+    <link href="<?php echo $this->url->getStatic('assets'); ?>/css/style.css" rel="stylesheet" type="text/css" />
+    <link href="<?php echo $this->url->getStatic('assets'); ?>/ueditor/themes/default/css/umeditor.css" type="text/css" rel="stylesheet">
+</head>
+<body>
+<div class="place">
+    <span>位置：</span>
+    <ul class="placeul">
+        <li><a href="<?php echo $this->url->get('/'); ?>" target="_parent">首页</a></li>
+        <li><?php if ($navTopMenu) { ?><?php echo $navTopMenu['name']; ?><?php } else { ?>幽灵菜单<?php } ?></li>
+        <?php if ($navSonMenu) { ?>
+        <li><a href="<?php echo $navSonMenu['url']; ?><?php echo $cond; ?>"><?php echo $navSonMenu['name']; ?></a></li>
+        <?php } else { ?>
+        <li>幽灵菜单</a></li>
+        <?php } ?>
+    </ul>
+<ul class="operator">
+    <?php if ($isBatchDeleteBut) { ?><li id="batchdelbut"><span><img src="<?php echo $this->url->getStatic('assets'); ?>/images/t03.png" /></span>批量删除</li><?php } ?>
+    <li><span><img src="<?php echo $this->url->getStatic('assets'); ?>/images/t04.png" /></span><a href="<?php echo $this->url->get('user/list'); ?><?php echo $cond; ?>">刷新</a></li>
+</ul>
+</div>
+<div class="rightinfo">
+    <div class="tools">
+        <form action="<?php echo $this->url->get('user/list'); ?>" method="post">
+            <ul class="search">
+                <li><label for="username">用户名</label><b>:</b><input type="text" value="<?php echo $userName; ?>" name="username" id="username"/></li>
+                <li><label for="status">用户状态</label><b>:</b>
+                    <select id="status" name="status">
+                        <option value="-1">全部</option>
+                        <?php foreach ($status as $index => $name) { ?>
+                            <option value="<?php echo $index; ?>" <?php if ($index == $statu) { ?> selected="selected" <?php } ?>><?php echo $name; ?></option>
+                        <?php } ?>
+                    </select>
+                </li>
+                <li><input type="hidden" name="navid" value="<?php echo $navId; ?>"/><input type="submit" value="搜索" class="search-but"/></li>
+            </ul>
+        </form>
+    </div>
+    <table class="tablelist">
+        <thead>
+        <tr>
+            <th><input name="" type="checkbox" value="" class="checkbut"/></th>
+            <th>序号</th>
+            <th>ID</th>
+            <th>头像</th>
+            <th>用户名</th>
+            <th>类型</th>
+            <th>角色</th>
+            <th>状态</th>
+            <th>注册IP</th>
+            <th>注册时间</th>
+            <th>登陆IP</th>
+            <th>登陆时间</th>
+            <th>操作</th>
+        </tr>
+        </thead>
+        <tbody>
+        <?php foreach ($users as $index => $user) { ?>
+        <tr>
+            <td><input name="userid"  class="checkinput" type="checkbox" value="<?php echo $user['id']; ?>" /></td>
+            <td><?php echo $index + 1; ?></td>
+            <td><?php echo $user['id']; ?></td>
+            <td><?php if ($user['savatar']) { ?><img src="<?php echo $user['savatar']; ?>" style="border: 1px solid #eeeeee; border-radius: 50%;"/><?php } ?></td>
+            <td><?php echo $user['username']; ?></td>
+            <td><?php echo $user['typename']; ?></td>
+            <td>
+                <?php if ($user['role']) { ?>
+                <span class="tablelink <?php if ($isSetBut && ($delStatus != $user['statusid'])) { ?> setrole<?php } ?>" <?php if ($isSetBut && ($delStatus != $user['statusid'])) { ?> style="cursor: pointer;"<?php } else { ?>style="cursor: not-allowed;" title="禁止操作"<?php } ?>  val="<?php echo $user['id']; ?>">
+                <?php foreach ($user['role'] as $roleName) { ?>
+                    <?php echo $roleName; ?>&nbsp;
+                <?php } ?>
+                </span>
+                <?php } else { ?>
+                <?php if ($isSetBut) { ?><span class="tablelink <?php if ($delStatus != $user['statusid']) { ?>setrole<?php } ?>" <?php if ($delStatus != $user['statusid']) { ?>style="cursor: pointer;"<?php } else { ?> style="cursor: not-allowed;" title="禁止操作" <?php } ?>  val="<?php echo $user['id']; ?>">设置角色</span><?php } ?>
+                <?php } ?>
+            </td>
+            <td><?php echo $user['status']; ?></td>
+            <td><?php echo $user['regip']; ?></td>
+            <td><?php echo $user['regtime']; ?></td>
+            <td><?php echo $user['loginip']; ?></td>
+            <td><?php echo $user['logintime']; ?></td>
+            <td>
+                <?php if ($isSendBut && ($normalStatus == $user['statusid'])) { ?><a  href="<?php echo $this->url->get('/user/msg'); ?>/uid/<?php echo $user['id']; ?>/page/<?php echo $page['page']; ?><?php echo $cond; ?>" class="tablelink">发消息</a>|<?php } ?>
+                <a href="<?php echo $this->url->get('/user/auth'); ?>/uid/<?php echo $user['id']; ?>/page/<?php echo $page['page']; ?><?php echo $cond; ?>" class="tablelink">权限项</a>|
+                <a href="<?php echo $this->url->get('/user/profile'); ?>/id/<?php echo $user['id']; ?>/page/<?php echo $page['page']; ?><?php echo $cond; ?>" class="tablelink">详情</a>
+                <?php if ($isPasswdBut) { ?>|<a <?php if ($delStatus != $user['statusid']) { ?> href="<?php echo $this->url->get('/user/password'); ?>/id/<?php echo $user['id']; ?>/page/<?php echo $page['page']; ?><?php echo $cond; ?>"<?php } else { ?>href="javascript:void(0);"style="cursor:not-allowed;" title="禁止操作"<?php } ?> class="tablelink">修改密码</a>|<?php } ?>
+                <?php if ($isSetBut) { ?><span class="tablelink setstatus" style="cursor: pointer;display: inline;"  val="<?php echo $user['id']; ?>">状态设置</span><?php } ?>
+                <?php if (($isDeleteBut && ($delStatus != $user['statusid']))) { ?>|<a href="<?php echo $this->url->get('/user/delete'); ?>/id/<?php echo $user['id']; ?><?php echo $cond; ?>" class="tablelink">删除</a><?php } ?>
+            </td>
+        </tr>
+        <div class="tip" id="role_<?php echo $user['id']; ?>">
+            <form action="<?php echo $this->url->get('/user/setrole'); ?>/page/<?php echo $page['page']; ?><?php echo $cond; ?>" method="post">
+                <div class="tiptop"><span>设置用户角色(<?php echo $user['username']; ?>)</span><a onclick="hideTip('#role_<?php echo $user['id']; ?>')"></a></div>
+                <div class="tipinfo" style="margin: 0;padding: 10px 40px;">
+                    <div class="tipright">
+                        <?php foreach ($roles as $role) { ?>
+                        <input  style="vertical-align: middle;" type="checkbox" name="role[]" value="<?php echo $role['id']; ?>-<?php echo $role['code']; ?>" <?php foreach ($user['roleid'] as $roleId) { ?><?php if ($roleId == $role['id']) { ?>checked="checked"<?php } ?><?php } ?>>&nbsp;<?php echo $role['name']; ?>&nbsp;&nbsp;&nbsp;
+                        <?php } ?>
+                    </div>
+                </div>
+                <div class="tipbtn">
+                    <input type="hidden" name="uid" value="<?php echo $user['id']; ?>"/>
+                    <input name="" type="submit"  class="sure" value="确定" />&nbsp;
+                    <input name="" type="button"  class="cancel" value="取消" onclick="hideTip('#role_<?php echo $user['id']; ?>')" />
+                </div>
+            </form>
+        </div>
+        <div class="tip" id="status_<?php echo $user['id']; ?>">
+            <form action="<?php echo $this->url->get('/user/setstatus'); ?>/page/<?php echo $page['page']; ?><?php echo $cond; ?>" method="post">
+                <div class="tiptop"><span>设置用户状态(<?php echo $user['username']; ?>)</span><a onclick="hideTip('#status_<?php echo $user['id']; ?>')"></a></div>
+                <div class="tipinfo">
+                    <div class="tipright">
+                        <?php foreach ($status as $statuId => $statu) { ?>
+                        <input  style="vertical-align: middle;" type="radio" name="ustatus" value="<?php echo $statuId; ?>" <?php if ($user['statusid'] == $statuId) { ?>checked="checked"<?php } ?>>&nbsp;<?php echo $statu; ?>&nbsp;&nbsp;&nbsp;
+                        <?php } ?>
+                    </div>
+                </div>
+                <div class="tipbtn">
+                    <input type="hidden" name="uid" value="<?php echo $user['id']; ?>"/>
+                    <input name="" type="submit"  class="sure" value="确定" />&nbsp;
+                    <input name="" type="button"  class="cancel" value="取消" onclick="hideTip('#status_<?php echo $user['id']; ?>')" />
+                </div>
+            </form>
+        </div>
+        <?php } ?>
+        </tbody>
+    </table>
+    <div class="pagin">
+        <?php if ($page['num']) { ?>
+        <div class="message">共<i class="blue"><?php echo $page['total']; ?></i>条记录，当前显示第&nbsp;<i class="blue"><?php echo $page['page']; ?>&nbsp;</i>页</div>
+        <ul class="paginList">
+            <li class="paginItem"><a href="<?php echo $this->url->get('/user/list/page/'); ?><?php echo $page['before']; ?><?php echo $cond; ?>"><span class="pagepre"></span></a></li>
+            <?php foreach (range(1, $page['num']) as $index) { ?>
+            <?php if ($page['page'] == $index) { ?>
+            <li class="paginItem current"><a href="<?php echo $this->url->get('/user/list/page/'); ?><?php echo $index; ?><?php echo $cond; ?>"><?php echo $index; ?></a></li>
+            <?php } else { ?>
+            <li class="paginItem"><a href="<?php echo $this->url->get('/user/list/page/'); ?><?php echo $index; ?><?php echo $cond; ?>"><?php echo $index; ?></a></li>
+            <?php } ?>
+            <?php } ?>
+            <li class="paginItem"><a href="<?php echo $this->url->get('/user/list/page/'); ?><?php echo $page['next']; ?><?php echo $cond; ?>"><span class="pagenxt"></span></a></li>
+        </ul>
+        <?php } else { ?>
+        <p align="center">暂无记录...</p>
+        <?php } ?>
+    </div>
+</div>
+<script type="text/javascript" src="<?php echo $this->url->getStatic('assets'); ?>/js/jquery.js"></script>
+<script type="text/javascript">
+    $(document).ready(function(){
+        $(".setrole").click(function(){
+            var userId = this.getAttribute('val');
+            $("#role_" + userId).fadeIn(200);
+        });
+        $(".setstatus").click(function(){
+            var userId = this.getAttribute('val');
+            $("#status_" + userId).fadeIn(200);
+        });
+        $('.checkbut').click(function(){
+            $('.checkinput').attr("checked",$(this).is(':checked'));
+        });
+
+        $('#batchdelbut').click(function(){
+            var ids = '';
+
+            $(".checkinput:checked").each(function(i, n){
+                ids += $(this).val() + ',';
+            });
+
+            if(!ids){
+                alert('请先选择需要删除的用户!');
+            }else{
+                location.href = '/user/delete/<?php echo $cond; ?>/id/' + ids;
+            }
+        })
+    });
+
+    function hideTip(name)
+    {
+        $(name).fadeOut(200);
+    }
+
+    $('.tablelist tbody tr:odd').addClass('odd');
+</script>
+<script type="text/javascript">
+    var links = document.links;
+
+    for(var i= 0,l=links.length; i < l; i++){
+        links[i].onclick = function(){
+            if(-1 == document.cookie.indexOf('admin_user=')){
+                parent.location.href = '/auth/login';
+
+                return false;
+            }
+
+            return true;
+        }
+    }
+</script>
+</body>
+</html>

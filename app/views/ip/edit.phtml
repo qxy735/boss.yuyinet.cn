@@ -1,0 +1,33 @@
+{% include "header.phtml" %}
+<li><a href="{{url('ip/edit')}}{{cond}}/id/{{ip['id']}}">编辑IP</a></li>
+</ul>
+</div>
+<div class="formbody">
+    <form action="{{url('ip/save')}}{{cond}}" method="post" id="myform">
+        <ul class="forminfo">
+            <li><label for="ip">IP</label><input id="ip" name="ip" value="{{ip['ip']}}" type="text" class="dfinput" />
+                {% for index,econd in conds %}
+                <input type="hidden" name="{{index}}" value="{{econd}}"/>
+                {% endfor %}
+            </li>
+            <li><label for="expire">过期时间</label><input type="text" class="dfinput" value="{{ip['expire']}}" name="expire" id="expire"/></li>
+            <li><label>&nbsp;</label><input type="hidden" name="id" value="{{ip['id']}}"/><input name="" type="submit" id="btn" class="btn" value="确认保存"/><input style="margin-left: 68px;" name="" type="reset" class="btn" value="重置信息"/></li>
+        </ul>
+    </form>
+</div>
+<script type="text/javascript" src="{{static_url('assets')}}/js/jquery.js"></script>
+<script type="text/javascript" src="{{static_url('assets')}}/js/jquery.date.js"></script>
+<script type="text/javascript">
+    $(document).ready(function(){
+        $('#expire').date_input();
+
+        $('#myform').submit(function(){
+            if(!$('#ip').val()){
+                alert('IP地址不能为空!');
+                return false;
+            }
+            return true;
+        });
+    });
+</script>
+{% include "footer.phtml" %}

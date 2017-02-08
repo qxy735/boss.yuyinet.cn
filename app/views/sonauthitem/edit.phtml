@@ -1,0 +1,40 @@
+{% include "header.phtml" %}
+        <li><a href="{{url('sonauthitem/list')}}/parentid/{{parentId}}{{curcond}}">子权限项</a></li>
+        <li><a href="{{url('sonauthitem/edit')}}/parentid/{{parentId}}/id/{{authItem['id']}}{{curcond}}">编辑子权限项</a></li>
+    </ul>
+</div>
+<div class="formbody">
+    <form action="{{url('sonauthitem/save')}}{{curcond}}" method="post">
+        <ul class="forminfo">
+            <li>
+                <label for="parentid">权限项归属</label>
+                <select name="parentid" id="parentid">
+                    <option value="0">顶级权限项</option>
+                    {% for item in topAuthItems %}
+                    <option value="{{item['id']}}" {% if item['id'] == authItem['parentid'] %}selected="selected"{% endif %}>{{item['name']}}</option>
+                    {% endfor %}
+                </select>
+                {% for index,econd in conds %}
+                <input type="hidden" name="{{index}}" value="{{econd}}"/>
+                {% endfor %}
+            </li>
+            <li>
+                <label for="type">权限项类型</label>
+                <select name="type" id="type">
+                    {% for index,typeName in types %}
+                    <option value="{{index}}" {% if index == authItem['type'] %}selected="selected"{% endif %}>{{typeName}}</option>
+                    {% endfor %}
+                </select>
+            </li>
+            <li><label for="name">权限项名称</label><input id="name" name="name" value="{{authItem['name']}}" type="text" class="dfinput" /></li>
+            <li><label for="code">权限项code</label><input id="code" name="code" value="{{authItem['code']}}" type="text" class="dfinput" /></li>
+            <li><label>是否有子项</label><cite>{% for index,authItemChild in authItemChilds %}<input name="haschild" type="radio" value="{{index}}" {% if authItem['haschild'] == index %}checked="checked"{% endif %}/>&nbsp;{{authItemChild}}&nbsp;&nbsp;&nbsp;&nbsp;{% endfor %}</cite></li>
+            <li><label>是否启用</label><cite>{% for index,authItemEnable in authItemEnables %}<input name="enabled" type="radio" value="{{index}}" {% if authItem['enabled'] == index %}checked="checked"{% endif %}/>&nbsp;{{authItemEnable}}&nbsp;&nbsp;&nbsp;&nbsp;{% endfor %}</cite></li>
+            <li><label for="displayorder">排序值</label><input id="displayorder" name="displayorder" type="text" class="dfinput" value="{{authItem['displayorder']}}" /></li>
+            <li><label for="auth">原子项配置</label><textarea name="auth" class="dfinput" style="resize: none;height: 100px;">{{authItem['auth']}}</textarea></li>
+            <li><label for="description">权限项描述</label><textarea name="description" class="dfinput" style="resize: none;height: 100px;">{{authItem['description']}}</textarea></li>
+            <li><label>&nbsp;</label><input type="hidden" name="parentid" value="{{parentId}}"/><input type="hidden" name="id" value="{{authItem['id']}}"><input name="" type="submit" id="btn" class="btn" value="确认保存"/><input style="margin-left: 68px;" name="" type="reset" class="btn" value="重置信息"/></li>
+        </ul>
+    </form>
+</div>
+{% include "footer.phtml" %}

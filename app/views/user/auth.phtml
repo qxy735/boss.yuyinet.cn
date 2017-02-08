@@ -1,0 +1,116 @@
+{% include "header.phtml" %}
+        <li><a href="{{url('/user/auth')}}/uid/{{user['id']}}{{cond}}">权限配置</a>{% if user['username']%} ({{user['username']}}){% endif %}</li>
+    </ul>
+</div>
+<div class="rightinfo">
+    <div class="tools">
+        <ul class="toolbar">
+            <li><span><img src="{{static_url('assets')}}/images/t04.png" /></span><a href="{{url('user/auth')}}/uid/{{user['id']}}/authtype/{{frontType}}{{cond}}" {% if authType == frontType %}style="color:#056dae;"{% endif %}>前台权限</a></li>
+            <li><span><img src="{{static_url('assets')}}/images/t04.png" /></span><a href="{{url('user/auth')}}/uid/{{user['id']}}/authtype/{{weiXinType}}{{cond}}" {% if authType == weiXinType %}style="color:#056dae;"{% endif %}>微信权限</a></li>
+        </ul>
+    </div>
+    <form action="{{url('/user/cauth')}}{{cond}}" method="post">
+        <table class="tablelist">
+            <thead>
+            <tr>
+                <th>名称</th>
+                <th>权限项</th>
+                <th>操作</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for index,topItem in topItems %}
+            <tr>
+                <td>{{topItem['name']}}</td>
+                <td id="item_{{topItem['id']}}">
+                    {% for sindex,atom in topItem['auth']['atoms']%}
+                    <input type="checkbox" name="atom_{{topItem['id']}}" class="topcheckbox" value="{{sindex}}"  {% for checkItem in  topItem['auth']['checkatoms'] %}{% if checkItem == sindex %}checked="checked"{% endif %}{% endfor %} style="vertical-align: middle;" />&nbsp;&nbsp;{{atom}}&nbsp;&nbsp;&nbsp;&nbsp;
+                    {% endfor %}
+                    {% if isAuthBut and (delStatus != user['status']) %}
+                    <b style="display: block;float: right;margin-right: 20px;">
+                    <input type="button" value="全选" onclick="allcheck('item_', {{topItem['id']}}, 'checked')" style="border-radius: 5px;border: 1px solid #DDDDDD;background-color: #ffffff;width: 50px;cursor: pointer;margin-left: 10px;"/>
+                    <input type="button" value="反选" onclick="allcheck('item_', {{topItem['id']}}, '')" style="border-radius: 5px;border: 1px solid #DDDDDD;background-color: #ffffff;width: 50px;cursor: pointer;margin-left: 10px;"/>
+                    </b>
+                    {% endif %}
+                </td>
+                <td>
+                    {% if isAuthBut and (delStatus != user['status']) %}
+                    <b class="tablelink" onclick="updateItem('item_', {{topItem['id']}})">修改</b>|
+                    <a href="{{url('/user/dauth')}}/uid/{{user['id']}}/authid/{{topItem['id']}}/authtype/{{authType}}{{cond}}" class="tablelink">撤销</a>
+                    {% endif %}
+                </td>
+            </tr>
+            {% for sonindex,sonItem in topItem['son'] %}
+            <tr>
+                <td>|—— {{sonItem['name']}}</td>
+                <td id="sonitem_{{sonItem['id']}}">
+                    {% for ssonindex,atom in sonItem['auth']['atoms']%}
+                    <input type="checkbox" name="atom_{{sonItem['id']}}" class="soncheckbox" value="{{ssonindex}}" {% for checkItem in  sonItem['auth']['checkatoms'] %}{% if checkItem == ssonindex %}checked="checked"{% endif %}{% endfor %} style="vertical-align: middle;" />&nbsp;&nbsp;{{atom}}&nbsp;&nbsp;&nbsp;&nbsp;
+                    {% endfor %}
+                    {% if isAuthBut and (delStatus != user['status']) %}
+                    <b style="display: block;float: right;margin-right: 20px;">
+                    <input type="button" value="全选" onclick="soncheck('sonitem_', {{sonItem['id']}}, 'checked')" style="border-radius: 5px;border: 1px solid #DDDDDD;background-color: #ffffff;width: 50px;cursor: pointer;margin-left: 10px;"/>
+                    <input type="button" value="反选" onclick="soncheck('sonitem_', {{sonItem['id']}}, '')" style="border-radius: 5px;border: 1px solid #DDDDDD;background-color: #ffffff;width: 50px;cursor: pointer;margin-left: 10px;"/>
+                    </b>
+                    {% endif %}
+                </td>
+                <td>
+                    {% if isAuthBut and (delStatus != user['status']) %}
+                    <b class="tablelink" onclick="updateItem('sonitem_', {{sonItem['id']}})">修改</b>|
+                    <a href="{{url('/user/dauth')}}/uid/{{user['id']}}/authid/{{sonItem['id']}}/authtype/{{authType}}{{cond}}" class="tablelink">撤销</a>
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+            {% endfor %}
+            </tbody>
+        </table>
+    </form>
+</div>
+<script type="text/javascript" src="{{static_url('assets')}}/js/jquery.js"></script>
+<script type="text/javascript">
+    $('.tablelist tbody tr:odd').addClass('odd');
+
+    function updateItem(name,value)
+    {
+        var obj = document.getElementById(name + value);
+        var checkboxs = obj ? obj.getElementsByTagName('input') : null;
+
+        var item="";
+
+        if(checkboxs){
+            for (var i=0;i<checkboxs.length;i++ ){
+                if(checkboxs[i].checked){
+                    item=item+checkboxs[i].value + ",";
+                }
+            }
+        }
+
+        if(item){
+            location.href = '/user/sauth/uid/{{user["id"]}}/authid/' + value + '/authtype/{{authType}}{{cond}}/item/' + item;
+        }else{
+            alert('请先勾选配置项!');
+        }
+    }
+
+    function allcheck(name,value,status)
+    {
+        var top = $('#' +name+value);
+        var sons = top.find('.topcheckbox');
+
+        sons.each(function(){
+            this.checked = status;
+        })
+    }
+
+    function soncheck(name,value,status)
+    {
+        var top = $('#' +name+value);
+        var sons = top.find('.soncheckbox');
+
+        sons.each(function(){
+            this.checked = status;
+        })
+    }
+</script>
+{% include "footer.phtml" %}

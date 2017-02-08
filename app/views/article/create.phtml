@@ -1,0 +1,100 @@
+{% include "header.phtml" %}
+        <li><a href="{{url('article/create')}}{{cond}}">添加文章</a></li>
+    </ul>
+</div>
+<div class="formbody">
+    <form action="{{url('article/post')}}{{cond}}" method="post" enctype="multipart/form-data">
+        <ul class="forminfo">
+            <li><label for="title">文章标题</label><input id="title" name="title" value="" type="text" class="dfinput" /></li>
+            <li>
+                <label for="menuid">归属菜单</label>
+                <select name="menuid" id="menuid">
+                    <option value="0">默认</option>
+                    {% for index,name in menus %}
+                    <option value="{{index}}">{{name}}</option>
+                    {% endfor %}
+                </select>
+            </li>
+            <li>
+                <label for="categoryid">归属分类</label>
+                <select name="categoryid" id="categoryid">
+                    <option value="0">默认</option>
+                    {% for topCategory in topCategorys %}
+                    <option value="{{topCategory['id']}}">{{topCategory['name']}}</option>
+                    {% for sonCategory in topCategory['son'] %}
+                    <option value="{{sonCategory['id']}}">&nbsp;&nbsp;&nbsp;{{sonCategory['name']}}</option>
+                    {% endfor %}
+                    {% endfor %}
+                </select>
+            </li>
+            <li><label for="cover">封面图片</label><input id="cover" name="cover" value="" type="file" class="dfinput" /></li>
+            <li><label for="come">文章来源</label><input id="come" name="come" value="" type="text" class="dfinput" /></li>
+            <li><label for="author">文章作者</label><input id="author" name="author" value="" type="text" class="dfinput" /></li>
+            <li><label for="coin">所需金币</label><input id="coin" name="coin" value="0" type="text" class="dfinput" /></li>
+            <li>
+                <label for="ispublic">是否公开</label>
+                <select name="ispublic" id="ispublic">
+                    {% for index,name in publics %}
+                    <option value="{{index}}">{{name}}</option>
+                    {% endfor %}
+                </select>
+            </li>
+            <li>
+                <label for="iscomment">允许评论</label>
+                <select name="iscomment" id="iscomment">
+                    {% for index,name in comments %}
+                    <option value="{{index}}" {% if index == defaultComment %}selected="selected"{% endif %}>{{name}}</option>
+                    {% endfor %}
+                </select>
+            </li>
+            <li>
+                <label for="status">文章状态</label>
+                <select name="status" id="status">
+                {% for index,name in status %}
+                    <option value="{{index}}">{{name}}</option>
+                {% endfor %}
+                </select>
+            </li>
+            <li><label for="tag">文章标签</label>
+            {% for tag in tags %}
+                <input style="vertical-align: bottom;margin-top: 10px;" type="checkbox" name="tag[]" value="{{tag['id']}}"/>&nbsp;&nbsp;{{tag['name']}}&nbsp;&nbsp;
+            {% endfor %}
+            </li>
+            <li><label for="content">文章内容</label></li>
+            <li style="padding-left: 85px;"><script type="text/plain" id="myEditor"></script></li>
+            <li><label for="attachment">上传附件</label><input id="attachment" name="attachment" value="" type="file" class="dfinput" /></li>
+            <li><label>&nbsp;</label><input name="" type="submit" class="btn" id="btn" value="确认保存"/><input style="margin-left: 68px;" name="" type="reset" class="btn" value="重置信息"/></li>
+        </ul>
+    </form>
+</div>
+<script type="text/javascript" src="{{static_url('assets')}}/js/jquery.js"></script>
+<script type="text/javascript" src="{{static_url('assets')}}/ueditor/third-party/jquery.min.js"></script>
+<script type="text/javascript" charset="utf-8" src="{{static_url('assets')}}/ueditor/umeditor.config.js"></script>
+<script type="text/javascript" charset="utf-8" src="{{static_url('assets')}}/ueditor/umeditor.min.js"></script>
+<script type="text/javascript" src="{{static_url('assets')}}/ueditor/lang/zh-cn/zh-cn.js"></script>
+<script type="text/javascript">
+    var btn = document.getElementById('btn');
+    btn.onclick = function(){
+        var title = document.getElementById('title');
+        if('' == title.value){
+            alert('文章标题必填!');
+            return false;
+        }
+        return true;
+    }
+    $(document).ready(function(){
+        var um = UM.getEditor('myEditor',{
+            toolbar:[
+                'source | undo redo | bold italic underline strikethrough | forecolor backcolor',
+                'fontfamily fontsize' ,
+                'link unlink | emotion image',
+                '| fullscreen'
+            ],
+            zIndex: 0,
+            initialFrameHeight: 200,
+            initialFrameWidth: 345,
+            imageUrl:'{{uploadUrl}}'
+        });
+    });
+</script>
+{% include "footer.phtml" %}

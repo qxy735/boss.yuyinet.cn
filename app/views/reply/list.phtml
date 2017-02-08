@@ -1,0 +1,105 @@
+{% include "header.phtml" %}
+<li><a href="{{url('reply/list')}}{{cond}}">回复管理</a></li>
+    </ul>
+<ul class="operator">
+    {% if isSendBut %}<li><span><img src="{{static_url('assets')}}/images/t01.png" /></span><a href="{{url('reply/create')}}{{cond}}">回复</a></li>{% endif %}
+    {% if isBatchDeleteBut %}<li id="batchdelbut"><span><img src="{{static_url('assets')}}/images/t03.png" /></span>批量删除</li>{% endif %}
+    <li><span><img src="{{static_url('assets')}}/images/t04.png" /></span><a href="{{url('reply/list')}}{{cond}}">刷新</a></li>
+</ul>
+</div>
+<div class="rightinfo">
+    <table class="tablelist">
+        <thead>
+        <tr>
+            <th><input name="" type="checkbox" value="" class="checkbut"/></th>
+            <th>序号</th>
+            <th>回复ID</th>
+            <th>回复内容</th>
+            <th>回复人</th>
+            <th>是否显示</th>
+            <th>回复时间</th>
+            <th>操作</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for index,reply in replys %}
+        <tr>
+            <td><input name="id"  class="checkinput" type="checkbox" value="{{reply['id']}}" /></td>
+            <td>{{index+1}}</td>
+            <td>{{reply['id']}}</td>
+            <td><span class="tablelink showReply" style="cursor: pointer;" val="{{reply['id']}}">查看</span></td>
+            <td>{{reply['creator']}}</td>
+            <td>{{reply['showname']}}</td>
+            <td>{{reply['createtime']}}</td>
+            <td>
+                {% if isSetBut %}
+                {% if defaultShow == reply['isshow']%}
+                <a href="{{url('/reply/hide')}}/id/{{reply['id']}}/_page/{{page['page']}}{{cond}}" class="tablelink">隐藏</a>|
+                {% else %}
+                <a href="{{url('/reply/show')}}/id/{{reply['id']}}/_page/{{page['page']}}{{cond}}" class="tablelink">显示</a>|
+                {% endif %}
+                {% endif %}
+                {% if isDeleteBut %}<a href="{{url('/reply/delete')}}/id/{{reply['id']}}{{cond}}" class="tablelink">删除</a>{% endif %}
+            </td>
+        </tr>
+        <div class="tip"  id="reply_{{reply['id']}}">
+            <div class="tiptop"><span>回复内容</span><a onclick="hideTip('#reply_{{reply['id']}}')"></a></div>
+            <div class="tipinfo" style="padding: 10px;margin: 0;">
+                <div class="tipright"  style="margin: 0;padding: 0;overflow-y: scroll;width:98%;height: 195px;">
+                    {{reply['content']}}
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+        </tbody>
+    </table>
+    <div class="pagin">
+        {% if page['num'] %}
+        <div class="message">共<i class="blue">{{page['total']}}</i>条记录，当前显示第&nbsp;<i class="blue">{{page['page']}}&nbsp;</i>页</div>
+        <ul class="paginList">
+            <li class="paginItem"><a href="{{url('/reply/list/_page/')}}{{page['before']}}{{cond}}"><span class="pagepre"></span></a></li>
+            {% for index in 1..page['num'] %}
+            {% if page['page'] == index %}
+            <li class="paginItem current"><a href="{{url('/reply/list/_page/')}}{{index}}{{cond}}">{{index}}</a></li>
+            {% else %}
+            <li class="paginItem"><a href="{{url('/reply/list/_page/')}}{{index}}{{cond}}">{{index}}</a></li>
+            {% endif %}
+            {% endfor %}
+            <li class="paginItem"><a href="{{url('/reply/list/_page/')}}{{page['next']}}{{cond}}"><span class="pagenxt"></span></a></li>
+        </ul>
+        {% else %}
+        <p align="center">暂无记录...</p>
+        {% endif %}
+    </div>
+</div>
+<script type="text/javascript" src="{{static_url('assets')}}/js/jquery.js"></script>
+<script type="text/javascript">
+    $(document).ready(function(){
+        $(".showReply").click(function(){
+            var replyId = this.getAttribute('val');
+            $("#reply_" + replyId).fadeIn(200);
+        });
+        $('.checkbut').click(function(){
+            $('.checkinput').attr("checked",$(this).is(':checked'));
+        });
+        $('#batchdelbut').click(function(){
+            var ids = '';
+
+            $(".checkinput:checked").each(function(i, n){
+                ids += $(this).val() + ',';
+            });
+
+            if(!ids){
+                alert('请先选择需要删除的回复信息!');
+            }else{
+                location.href = '/reply/delete/{{cond}}/id/' + ids;
+            }
+        })
+    });
+    function hideTip(name)
+    {
+        $(name).fadeOut(200);
+    }
+    $('.tablelist tbody tr:odd').addClass('odd');
+</script>
+{% include "footer.phtml" %}

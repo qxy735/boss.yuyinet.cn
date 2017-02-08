@@ -1,0 +1,137 @@
+{% include "header.phtml" %}
+</ul>
+<ul class="operator">
+    {% if isBatchDeleteBut %}<li id="batchdelbut"><span><img src="{{static_url('assets')}}/images/t03.png" /></span>批量删除</li>{% endif %}
+    <li class="click"><span><img src="{{static_url('assets')}}/images/t04.png" /></span><a href="{{url('/loginlog/list')}}{{cond}}">刷新</a></li>
+</ul>
+</div>
+<div class="rightinfo">
+    <div class="tools">
+        <form action="{{url('loginlog/list')}}" method="post">
+            <ul class="search">
+                <li><label for="username">用户名</label><b>:</b><input type="text" value="{{userName}}" name="username" id="username" style="width: 100px;"/></li>
+                <!--<li><label for="starttime">登录开始时间</label><b>:</b><input type="text" value="{{startTime}}" name="starttime" id="starttime" style="width: 65px;"/></li>
+                <li><label for="endtime">登录结束时间</label><b>:</b><input type="text" value="{{endTime}}" name="endtime" id="endtime" style="width: 65px;"/></li>-->
+                <li><label for="loginip">登录IP</label><b>:</b><input type="text" value="{{ip}}" name="loginip" id="loginip" style="width: 100px;"/></li>
+                <li><label for="status">登录状态</label><b>:</b>
+                    <select id="status" name="status">
+                        <option value="-1">全部</option>
+                        {% for index,name in status %}
+                        <option value="{{index}}" {% if index == statu %} selected="selected" {% endif %}>{{name}}</option>
+                        {% endfor %}
+                    </select>
+                </li>
+                <li><label for="type">用户类型</label><b>:</b>
+                    <select id="type" name="type">
+                        <option value="-1">全部</option>
+                        {% for index,name in types %}
+                        <option value="{{index}}" {% if index == type %} selected="selected" {% endif %}>{{name}}</option>
+                        {% endfor %}
+                    </select>
+                </li>
+                <li><label for="source">登录来源</label><b>:</b>
+                    <select id="source" name="source">
+                        <option value="-1">全部</option>
+                        {% for index,name in sources %}
+                        <option value="{{index}}" {% if index == source %} selected="selected" {% endif %}>{{name}}</option>
+                        {% endfor %}
+                    </select>
+                </li>
+                <li><input type="hidden" name="navid" value="{{navId}}"/><input type="submit" value="搜索" id="formbut" class="search-but"/></li>
+            </ul>
+        </form>
+    </div>
+    <table class="tablelist">
+        <thead>
+        <tr>
+            <th><input name="" type="checkbox" value="" class="checkbut"/></th>
+            <th>序号</th>
+            <th>ID</th>
+            <th>用户名</th>
+            <th>登录时间</th>
+            <th>登录IP</th>
+            <th>登录状态</th>
+            <th>失败原因</th>
+            <th>用户类型</th>
+            <th>登录来源</th>
+            <th>操作</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for index,log in logs %}
+        <tr>
+            <td><input name="checkinput" type="checkbox"  class="checkinput" value="{{log['id']}}" /></td>
+            <td>{{index+1}}</td>
+            <td>{{log['id']}}</td>
+            <td>{{log['username']}}</td>
+            <td>{{log['logintime']}}</td>
+            <td>{{log['loginip']}}</td>
+            <td>{{log['status']}}</td>
+            <td>{{log['cause']}}</td>
+            <td>{{log['type']}}</td>
+            <td>{{log['origin']}}</td>
+            <td>{% if isDeleteBut %}<a href="{{url('/loginlog/delete')}}{{cond}}/id/{{log['id']}}" class="tablelink"> 删除</a></td>{% endif %}
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    <div class="pagin">
+        {% if page['num'] %}
+        <div class="message">共<i class="blue">{{page['total']}}</i>条记录，当前显示第&nbsp;<i class="blue">{{page['page']}}&nbsp;</i>页</div>
+        <ul class="paginList">
+            <li class="paginItem"><a href="{{url('/loginlog/list/page/')}}{{page['before']}}{{cond}}"><span class="pagepre"></span></a></li>
+            {% for index in 1..page['num'] %}
+            {% if page['page'] == index %}
+            <li class="paginItem current"><a href="{{url('/loginlog/list/page/')}}{{index}}{{cond}}">{{index}}</a></li>
+            {% else %}
+            <li class="paginItem"><a href="{{url('/loginlog/list/page/')}}{{index}}{{cond}}">{{index}}</a></li>
+            {% endif %}
+            {% endfor %}
+            <li class="paginItem"><a href="{{url('/loginlog/list/page/')}}{{page['next']}}{{cond}}"><span class="pagenxt"></span></a></li>
+        </ul>
+        {% else %}
+        <p align="center">暂无记录...</p>
+        {% endif %}
+    </div>
+</div>
+<script type="text/javascript" src="{{static_url('assets')}}/js/jquery.js"></script>
+<!--<script type="text/javascript" src="{{static_url('assets')}}/js/jquery.date.js"></script>-->
+<script type="text/javascript">
+    $(function(){
+        $('.tablelist tbody tr:odd').addClass('odd');
+        /*$('#starttime').date_input();
+        $('#endtime').date_input();
+        $('#formbut').click(function(){
+            var stime = $('#starttime').val();
+            var etime = $('#endtime').val();
+            if( stime && etime){
+                stime = Date.parse(new Date(stime)) / 1000;
+                etime = Date.parse(new Date(etime)) / 1000;
+                if(stime > etime){
+                    alert('结束时间必须大于开始时间');
+                    return false;
+                }
+            }
+            return true;
+        });*/
+
+        $('.checkbut').click(function(){
+            $('.checkinput').attr("checked",$(this).is(':checked'));
+        });
+
+        $('#batchdelbut').click(function(){
+            var ids = '';
+
+            $(".checkinput:checked").each(function(i, n){
+                ids += $(this).val() + ',';
+            });
+
+            if(!ids){
+                alert('请先选择需要删除的登录日志信息!');
+            }else{
+                location.href = '/loginlog/delete/{{cond}}/id/' + ids;
+            }
+        })
+    });
+</script>
+{% include "footer.phtml" %}

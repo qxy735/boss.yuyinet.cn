@@ -1,0 +1,89 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>禹译后台管理系统</title>
+    <link href="<?php echo $this->url->getStatic('assets'); ?>/css/style.css" rel="stylesheet" type="text/css" />
+    <link href="<?php echo $this->url->getStatic('assets'); ?>/ueditor/themes/default/css/umeditor.css" type="text/css" rel="stylesheet">
+</head>
+<body>
+<div class="place">
+    <span>位置：</span>
+    <ul class="placeul">
+        <li><a href="<?php echo $this->url->get('/'); ?>" target="_parent">首页</a></li>
+        <li><?php if ($navTopMenu) { ?><?php echo $navTopMenu['name']; ?><?php } else { ?>幽灵菜单<?php } ?></li>
+        <?php if ($navSonMenu) { ?>
+        <li><a href="<?php echo $navSonMenu['url']; ?><?php echo $cond; ?>"><?php echo $navSonMenu['name']; ?></a></li>
+        <?php } else { ?>
+        <li>幽灵菜单</a></li>
+        <?php } ?>
+        <li><a href="<?php echo $this->url->get('menu/create'); ?><?php echo $cond; ?>">添加菜单</a></li>
+    </ul>
+</div>
+<div class="formbody">
+    <form action="<?php echo $this->url->get('menu/post'); ?><?php echo $cond; ?>" method="post">
+    <ul class="forminfo">
+        <li>
+            <label for="parentid">菜单归属</label>
+            <select name="parentid" id="parentid">
+                <option value="0">顶级菜单</option>
+                <?php foreach ($topMenus as $topMenu) { ?>
+                    <option value="<?php echo $topMenu['id']; ?>"><?php echo $topMenu['name']; ?></option>
+                <?php } ?>
+            </select>
+        </li>
+        <li>
+            <label for="type">菜单类型</label>
+            <select name="type" id="type">
+                <?php foreach ($types as $index => $name) { ?>
+                    <option value="<?php echo $index; ?>"><?php echo $name; ?></option>
+                <?php } ?>
+            </select>
+        </li>
+        <li><label for="name">菜单名称</label><input id="name" name="name" value="" type="text" class="dfinput" /></li>
+        <li><label for="code">菜单code</label><input id="code" name="code" value="" type="text" class="dfinput" /></li>
+        <li><label>是否有子菜单</label><cite><input name="haschild" type="radio" value="1"/>&nbsp;是&nbsp;&nbsp;&nbsp;&nbsp;<input name="haschild" type="radio" value="0" checked="checked"/>&nbsp;否</cite></li>
+        <li><label>是否启用</label><cite><input name="enabled" type="radio" value="1" checked="checked" />&nbsp;是&nbsp;&nbsp;&nbsp;&nbsp;<input name="enabled" type="radio" value="0" />&nbsp;否</cite></li>
+        <li><label for="url">菜单地址</label><input id="url" name="url" type="text" class="dfinput" value="http://www.yuyinet.cn" /></li>
+        <li><label for="displayorder">排序值</label><input id="displayorder" name="displayorder" type="text" class="dfinput" value="255" /></li>
+        <li><label for="auth">权限配置</label><input id="auth" name="auth" type="text" class="dfinput" value="" placeholder='例: {"blog.menu.top":"L"}'/></li>
+        <li><label>&nbsp;</label><input name="" type="submit" class="btn" id="btn" value="确认保存"/><input style="margin-left: 68px;" name="" type="reset" class="btn" value="重置信息"/></li>
+    </ul>
+    </form>
+</div>
+<script type="text/javascript">
+    var btn = document.getElementById('btn');
+    btn.onclick = function(){
+        var name = document.getElementById('name');
+        var code = document.getElementById('code');
+
+        if('' == name.value){
+            alert('菜单名称必填!');
+            return false;
+        }
+
+        if('' == code.value){
+            alert('菜单code必填!');
+            return false;
+        }
+
+        return true;
+    }
+</script>
+<script type="text/javascript">
+    var links = document.links;
+
+    for(var i= 0,l=links.length; i < l; i++){
+        links[i].onclick = function(){
+            if(-1 == document.cookie.indexOf('admin_user=')){
+                parent.location.href = '/auth/login';
+
+                return false;
+            }
+
+            return true;
+        }
+    }
+</script>
+</body>
+</html>

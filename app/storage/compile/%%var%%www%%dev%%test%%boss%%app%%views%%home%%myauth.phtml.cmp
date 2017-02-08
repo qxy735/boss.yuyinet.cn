@@ -1,0 +1,146 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>禹译后台管理系统</title>
+    <link href="<?php echo $this->url->getStatic('assets'); ?>/css/style.css" rel="stylesheet" type="text/css" />
+    <link href="<?php echo $this->url->getStatic('assets'); ?>/ueditor/themes/default/css/umeditor.css" type="text/css" rel="stylesheet">
+</head>
+<body>
+<div class="place">
+    <span>位置：</span>
+    <ul class="placeul">
+        <li><a href="<?php echo $this->url->get('/'); ?>" target="_parent">首页</a></li>
+        <li><?php if ($navTopMenu) { ?><?php echo $navTopMenu['name']; ?><?php } else { ?>幽灵菜单<?php } ?></li>
+        <?php if ($navSonMenu) { ?>
+        <li><a href="<?php echo $navSonMenu['url']; ?><?php echo $cond; ?>"><?php echo $navSonMenu['name']; ?></a></li>
+        <?php } else { ?>
+        <li>幽灵菜单</a></li>
+        <?php } ?>
+</ul>
+</div>
+<div class="rightinfo">
+    <div class="tools">
+        <ul class="toolbar">
+            <li><span><img src="<?php echo $this->url->getStatic('assets'); ?>/images/t04.png" /></span><a href="<?php echo $this->url->get('home/myauth'); ?>/uid/<?php echo $user['id']; ?>/type/<?php echo $frontType; ?><?php echo $cond; ?>" <?php if ($type == $frontType) { ?>style="color:#056dae;"<?php } ?>>前台权限</a></li>
+            <li><span><img src="<?php echo $this->url->getStatic('assets'); ?>/images/t04.png" /></span><a href="<?php echo $this->url->get('home/myauth'); ?>/uid/<?php echo $user['id']; ?>/type/<?php echo $adminType; ?><?php echo $cond; ?>" <?php if ($type == $adminType) { ?>style="color:#056dae;"<?php } ?>>后台权限</a></li>
+            <li><span><img src="<?php echo $this->url->getStatic('assets'); ?>/images/t04.png" /></span><a href="<?php echo $this->url->get('home/myauth'); ?>/uid/<?php echo $user['id']; ?>/type/<?php echo $weiXinType; ?><?php echo $cond; ?>" <?php if ($type == $weiXinType) { ?>style="color:#056dae;"<?php } ?>>微信权限</a></li>
+        </ul>
+    </div>
+    <form action="<?php echo $this->url->get('/home/cauth'); ?><?php echo $cond; ?>" method="post">
+        <table class="tablelist">
+            <thead>
+            <tr>
+                <th>名称</th>
+                <th>权限项</th>
+                <th>操作</th>
+            </tr>
+            </thead>
+            <tbody>
+            <?php foreach ($topItems as $index => $topItem) { ?>
+            <tr>
+                <td><?php echo $topItem['name']; ?></td>
+                <td id="item_<?php echo $topItem['id']; ?>">
+                    <?php foreach ($topItem['auth']['atoms'] as $sindex => $atom) { ?>
+                    <input type="checkbox" name="atom_<?php echo $topItem['id']; ?>" class="topcheckbox" value="<?php echo $sindex; ?>"  <?php foreach ($topItem['auth']['checkatoms'] as $checkItem) { ?><?php if ($checkItem == $sindex) { ?>checked="checked"<?php } ?><?php } ?> style="vertical-align: middle;" />&nbsp;&nbsp;<?php echo $atom; ?>&nbsp;&nbsp;&nbsp;&nbsp;
+                    <?php } ?>
+                    <?php if ($isAuthBut) { ?>
+                    <b style="display: block;float: right;margin-right: 20px;">
+                    <input type="button" value="全选" onclick="allcheck('item_', <?php echo $topItem['id']; ?>, 'checked')" style="border-radius: 5px;border: 1px solid #DDDDDD;background-color: #ffffff;width: 50px;cursor: pointer;margin-left: 10px;"/>
+                    <input type="button" value="反选" onclick="allcheck('item_', <?php echo $topItem['id']; ?>, '')" style="border-radius: 5px;border: 1px solid #DDDDDD;background-color: #ffffff;width: 50px;cursor: pointer;margin-left: 10px;"/>
+                    </b>
+                    <?php } ?>
+                </td>
+                <td>
+                    <?php if ($isAuthBut) { ?><b class="tablelink" onclick="updateItem('item_', <?php echo $topItem['id']; ?>)">修改</b><?php } ?>
+                    <?php if ($isAuthBut) { ?>|<a href="<?php echo $this->url->get('/home/dauth'); ?>/uid/<?php echo $user['id']; ?>/authid/<?php echo $topItem['id']; ?>/type/<?php echo $type; ?><?php echo $cond; ?>" class="tablelink">撤销</a><?php } ?>
+                </td>
+            </tr>
+            <?php foreach ($topItem['son'] as $sonindex => $sonItem) { ?>
+            <tr>
+                <td>|——<?php echo $sonItem['name']; ?></td>
+                <td id="sonitem_<?php echo $sonItem['id']; ?>">
+                    <?php foreach ($sonItem['auth']['atoms'] as $ssonindex => $atom) { ?>
+                    <input type="checkbox" name="atom_<?php echo $sonItem['id']; ?>" class="soncheckbox" value="<?php echo $ssonindex; ?>" <?php foreach ($sonItem['auth']['checkatoms'] as $checkItem) { ?><?php if ($checkItem == $ssonindex) { ?>checked="checked"<?php } ?><?php } ?> style="vertical-align: middle;" />&nbsp;&nbsp;<?php echo $atom; ?>&nbsp;&nbsp;&nbsp;&nbsp;
+                    <?php } ?>
+                    <?php if ($isAuthBut) { ?>
+                    <b style="display: block;float: right;margin-right: 20px;">
+                    <input type="button" value="全选" onclick="soncheck('sonitem_', <?php echo $sonItem['id']; ?>, 'checked')" style="border-radius: 5px;border: 1px solid #DDDDDD;background-color: #ffffff;width: 50px;cursor: pointer;margin-left: 10px;"/>
+                    <input type="button" value="反选" onclick="soncheck('sonitem_', <?php echo $sonItem['id']; ?>, '')" style="border-radius: 5px;border: 1px solid #DDDDDD;background-color: #ffffff;width: 50px;cursor: pointer;margin-left: 10px;"/>
+                    </b>
+                    <?php } ?>
+                </td>
+                <td>
+                    <?php if ($isAuthBut) { ?><b class="tablelink" onclick="updateItem('sonitem_', <?php echo $sonItem['id']; ?>)">修改</b><?php } ?>
+                    <?php if ($isAuthBut) { ?>|<a href="<?php echo $this->url->get('/home/dauth'); ?>/uid/<?php echo $user['id']; ?>/authid/<?php echo $sonItem['id']; ?>/type/<?php echo $type; ?><?php echo $cond; ?>" class="tablelink">撤销</a><?php } ?>
+                </td>
+            </tr>
+            <?php } ?>
+            <?php } ?>
+            </tbody>
+        </table>
+    </form>
+</div>
+<script type="text/javascript" src="<?php echo $this->url->getStatic('assets'); ?>/js/jquery.js"></script>
+<script type="text/javascript">
+    $('.tablelist tbody tr:odd').addClass('odd');
+
+    function updateItem(name,value)
+    {
+        var obj = document.getElementById(name + value);
+        var checkboxs = obj ? obj.getElementsByTagName('input') : null;
+
+        var item="";
+
+        if(checkboxs){
+            for (var i=0;i<checkboxs.length;i++ ){
+                if(checkboxs[i].checked){
+                    item=item+checkboxs[i].value + ",";
+                }
+            }
+        }
+
+        if(item){
+            location.href = '/home/sauth/uid/<?php echo $user['id']; ?>/type/<?php echo $type; ?>/authid/' + value + '<?php echo $cond; ?>/item/' + item;
+        }else{
+            alert('请先勾选配置项!');
+        }
+    }
+
+    function allcheck(name,value,status)
+    {
+        var top = $('#' +name+value);
+        var sons = top.find('.topcheckbox');
+
+        sons.each(function(){
+            this.checked = status;
+        })
+    }
+
+    function soncheck(name,value,status)
+    {
+        var top = $('#' +name+value);
+        var sons = top.find('.soncheckbox');
+
+        sons.each(function(){
+            this.checked = status;
+        })
+    }
+</script>
+<script type="text/javascript">
+    var links = document.links;
+
+    for(var i= 0,l=links.length; i < l; i++){
+        links[i].onclick = function(){
+            if(-1 == document.cookie.indexOf('admin_user=')){
+                parent.location.href = '/auth/login';
+
+                return false;
+            }
+
+            return true;
+        }
+    }
+</script>
+</body>
+</html>

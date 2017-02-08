@@ -1,0 +1,28 @@
+{% include "header.phtml" %}
+<li><a href="{{url('msg/read')}}/id/{{msg['id']}}{{cond}}">阅读回复</a></li>
+</ul>
+</div>
+<div class="formbody">
+    <form action="{{url('msg/reply')}}{{cond}}" method="post" id="myform">
+        <ul class="forminfo">
+            <li><label for="content">留言内容</label></li>
+            <li style="padding-left: 85px;"><textarea disabled="disabled" style="background-color:#ffffff;resize: none;border-color: #a7b5bc #ffffff #ced9df #a7b5bc;border-style: solid;border-width: 1px;width:330px;padding:10px;height: 150px;overflow-y: scroll;">{{msg['content']}}</textarea></li>
+            <li><label for="reply">回复内容</label><textarea  {% if !isSendBut %} disabled="disabled" {% endif %} name="reply" id="reply" style="resize: none;height: 130px;" class="dfinput">{{msg['reply']}}</textarea></li>
+            <li><label>&nbsp;</label><input type="hidden" name="id" value="{{msg['id']}}"/><input name="" type="submit" id="btn" class="btn" value="确认回复" {% if !isSendBut %}  title='禁止操作' style='background-image:none;background-color:#ddd; cursor:not-allowed;' disabled='disabled' {% endif %}/><input style="margin-left: 68px;" name="" type="reset" class="btn" value="重置信息"/></li>
+        </ul>
+    </form>
+</div>
+<script type="text/javascript" src="{{static_url('assets')}}/js/jquery.js"></script>
+<script type="text/javascript">
+    $(document).ready(function(){
+        $('#myform').submit(function(){
+            if(!$('#reply').val()){
+                alert('回复内容不能为空!');
+
+                return false;
+            }
+            return true;
+        });
+    });
+</script>
+{% include "footer.phtml" %}

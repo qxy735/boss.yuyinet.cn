@@ -1,0 +1,76 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>禹译后台管理系统</title>
+    <link href="<?php echo $this->url->getStatic('assets'); ?>/css/style.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div class="place">
+    <span>位置：</span>
+    <ul class="placeul">
+        <li><a href="<?php echo $this->url->get('/index/main'); ?>">首页</a></li>
+    </ul>
+</div>
+<div class="mainindex">
+    <div class="welinfo">
+        <span><img src="<?php echo $this->url->getStatic('assets'); ?>/images/sun.png" alt="天气" /></span>
+        <b><?php echo $userName; ?> <?php echo $greet; ?>好，欢迎使用禹译后台管理系统</b> (boss.yuyinet.com)
+    </div>
+    <div class="xline"></div>
+    <div class="welinfo">
+        <span><img src="<?php echo $this->url->getStatic('assets'); ?>/images/time.png" alt="时间" /></span>
+        <i>您上次登录的时间：<?php echo $lastTime; ?></i> （不是您登录的? 请及时修改密码或联系管理员!）
+    </div>
+    <div class="welinfo">
+        <span><img src="<?php echo $this->url->getStatic('assets'); ?>/images/dp.png" alt="IP" /></span>
+        <i>您上次登录的IP：<?php echo $lastIp; ?></i> （不是您登录的? 请及时修改密码或联系管理员!）
+    </div>
+    <div class="xline"></div>
+    <div class="uimakerinfo"><b>用户统计</b></div>
+    <table class="tablelist">
+        <thead>
+        <tr>
+            <th>统计项</th>
+            <th>统计值</th>
+        </tr>
+        </thead>
+        <tbody>
+        <?php foreach ($totals as $key => $value) { ?>
+        <tr>
+            <td width="300px"><?php echo $key; ?></td>
+            <td><?php echo $value; ?></td>
+        </tr>
+        <?php } ?>
+        </tbody>
+    </table>
+    <div class="uimakerinfo"><b>服务器信息</b></div>
+    <table class="tablelist">
+        <thead>
+        <tr>
+            <th>信息项</th>
+            <th>信息值</th>
+        </tr>
+        </thead>
+        <tbody>
+        <?php foreach ($servers as $key => $value) { ?>
+        <tr>
+            <td width="300px"><?php echo $key; ?></td>
+            <td><?php echo $value; ?></td>
+        </tr>
+        <?php } ?>
+        </tbody>
+    </table>
+</div>
+<div class="copyright">
+    <p>Copyright ©2016 yuyinet v1.0 All Rights Reserved.</p>
+    <p>本后台系统由禹译网提供技术支持</p>
+</div>
+<script type="text/javascript" src="<?php echo $this->url->getStatic('assets'); ?>/js/jquery.js"></script>
+<script type="text/javascript">
+    $(function(){
+        $('.tablelist tbody tr:odd').addClass('odd');
+    });
+</script>
+</body>
+</html>

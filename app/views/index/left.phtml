@@ -1,0 +1,44 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>禹译后台管理系统</title>
+    <link href="{{static_url('assets')}}/css/style.css" rel="stylesheet" type="text/css" />
+    <script language="JavaScript" src="{{static_url('assets')}}/js/jquery.js"></script>
+    <script type="text/javascript">
+        $(function(){
+            $(".menuson li").click(function(){
+                $(".menuson li.active").removeClass("active")
+                $(this).addClass("active");
+            });
+            $('.title').click(function(){
+                var $ul = $(this).next('ul');
+                $('dd').find('ul').slideUp();
+                if($ul.is(':visible')){
+                    $(this).next('ul').slideUp();
+                }else{
+                    $(this).next('ul').slideDown();
+                }
+            });
+        })
+    </script>
+</head>
+<body style="background:#f0f9fd;">
+<div class="lefttop"><span></span>功能菜单</div>
+<dl class="leftmenu">
+    {% if topMenus %}
+    {% for index,topMenu in topMenus %}
+    <dd>
+        <div class="title">
+            <span><img src="{{static_url('assets')}}/images/leftico01.png" /></span>{{topMenu['name']}}
+        </div>
+        <ul class="menuson">
+        {% for sonMenu in topMenu['son'] %}
+            <li><cite></cite><a href="{{sonMenu['url']}}/navid/{{sonMenu['id']}}" target="rightFrame">{{sonMenu['name']}}</a><i></i></li>
+        {% endfor %}
+        </ul>
+    </dd>
+    {% endfor %}
+    {% endif %}
+</dl>
+{% include "footer.phtml" %}

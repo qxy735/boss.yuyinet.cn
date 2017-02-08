@@ -1,0 +1,29 @@
+{% include "header.phtml" %}
+<li><a href="{{url('ip/create')}}{{cond}}">添加IP</a></li>
+</ul>
+</div>
+<div class="formbody">
+    <form action="{{url('ip/post')}}{{cond}}" method="post" id="myform">
+        <ul class="forminfo">
+            <li><label for="ip">IP</label><input id="ip" name="ip" value="" type="text" class="dfinput" /></li>
+            <li><label for="expire">过期时间</label><input type="text" class="dfinput" value="" name="expire" id="expire"/></li>
+            <li><label>&nbsp;</label><input name="" type="submit" id="btn" class="btn" value="确认保存"/><input style="margin-left: 68px;" name="" type="reset" class="btn" value="重置信息"/></li>
+        </ul>
+    </form>
+</div>
+<script type="text/javascript" src="{{static_url('assets')}}/js/jquery.js"></script>
+<script type="text/javascript" src="{{static_url('assets')}}/js/jquery.date.js"></script>
+<script type="text/javascript">
+    $(document).ready(function(){
+        $('#expire').date_input();
+
+        $('#myform').submit(function(){
+            if(!$('#ip').val()){
+                alert('IP地址不能为空!');
+                return false;
+            }
+            return true;
+        });
+    });
+</script>
+{% include "footer.phtml" %}

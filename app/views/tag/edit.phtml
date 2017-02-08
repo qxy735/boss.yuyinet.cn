@@ -1,0 +1,37 @@
+{% include "header.phtml" %}
+<li><a href="{{url('tag/edit')}}{{cond}}/id/{{tag['id']}}">编辑标签</a></li>
+</ul>
+</div>
+<div class="formbody">
+    <form action="{{url('tag/save')}}{{cond}}" method="post" id="myform">
+        <ul class="forminfo">
+            <li><label for="name">标签名称</label><input type="text" class="dfinput" value="{{tag['name']}}" name="name" id="name"/></li>
+            <li>
+                <label for="enabled">是否启用</label>
+                <select name="enabled" id="enabled">
+                    {% for index,name in enableds %}
+                    <option value="{{index}}" {% if index == tag['enabled'] %}selected='selected'{% endif %}>{{name}}</option>
+                    {% endfor %}
+                </select>
+                {% for index,econd in conds %}
+                <input type="hidden" name="{{index}}" value="{{econd}}"/>
+                {% endfor %}
+            </li>
+            <li><label>&nbsp;</label><input type="hidden" name="id" value="{{tag['id']}}"/><input name="" type="submit" id="btn" class="btn" value="确认保存"/><input style="margin-left: 68px;" name="" type="reset" class="btn" value="重置信息"/></li>
+        </ul>
+    </form>
+</div>
+<script type="text/javascript" src="{{static_url('assets')}}/js/jquery.js"></script>
+<script type="text/javascript" src="{{static_url('assets')}}/js/jquery.date.js"></script>
+<script type="text/javascript">
+    $(document).ready(function(){
+        $('#myform').submit(function(){
+            if(!$('#name').val()){
+                alert('标签名称不能为空!');
+                return false;
+            }
+            return true;
+        });
+    });
+</script>
+{% include "footer.phtml" %}

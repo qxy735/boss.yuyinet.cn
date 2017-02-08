@@ -1,0 +1,381 @@
+blog_users(用户表)
+
+字段名称	字段类型	备注说明
+id		int(10)		主键ID
+username	varchar(32)	用户名
+password	char(32)	密码
+type		tinyint(2)	用户类型 0 => 前台， 1 => 后台
+status      tinyint(2)  用户状态 0 => 正常，1 => 待审核，2 => 已删除，3 => 已禁用
+avatar		varcahr(300)	用户头像
+regip		int(10)		注册IP
+regtime		int(10)		注册时间
+loginip		int(10)		登录IP
+logintime	int(10)		登录时间
+
+blog_profiles(用户详情表)
+
+字段名称    字段类型    备注说明
+id          int(10)     主键ID
+uid         int(10)     用户表ID
+email       varchar(50) 邮箱地址
+mobile      char(11)     手机号
+zodiac      tinyint(2) 星座
+birthday    int(10) 生日
+coin        int(10)     禹译币
+happy       varchar(50) 爱好
+address     varchar(100) 联系地址
+edu         tinyint(2)   学历, 0 => 无, 幼儿园, .... , 科学家
+age         tinyint(2)   年龄, 1 - 99
+sex         tinyint(1)   性别, 0 => 无, 1 => 男, 2 => 女, 3 => 中性
+createtime	int(10)		添加时间
+creator		varchar(32)	添加者
+lastoperate	int(10)		最后操作时间
+lastoperator	varchar(32)	最后操作者
+
+blog_messages(用户消息表)
+
+字段名称    字段类型    备注说明
+id          int(10)     主键ID
+sendid      int(10)     发信人ID
+sendname    varchar(32) 发信人姓名
+title       varchar(255)消息标题
+content     text        消息内容
+typeid      int(10)     消息类型
+isfriend    tinyint(1)  是否为好友关系, 0 => 否, 1 => 是
+msgtype      tinyint(1)  消息端, 0 => 网页, 1 => 系统, 2 => 微信
+sendtime    int(10)     发送时间
+createtime	int(10)		添加时间
+creator		varchar(32)	添加者
+lastoperate	int(10)		最后操作时间
+lastoperator	varchar(32)	最后操作者
+
+blog_messagedetails(用户消息详情表)
+
+字段名称    字段类型    备注说明
+id          int(10)     主键ID
+messageid   int(10)     消息ID
+postid      int(10)     收信人ID
+postname    varchar(32) 收信人姓名
+isread      tinyint(1)  消息状态, 0 => 未阅读, 1 => 已阅读
+createtime	int(10)		添加时间
+creator		varchar(32)	添加者
+lastoperate	int(10)		最后操作时间
+lastoperator	varchar(32)	最后操作者
+
+blog_msgtypes(消息类型表)
+
+字段名称    字段类型    备注说明
+id          int(10)     主键ID
+name        varchar(100)类型名称
+enabled     tinyint(1)  是否启用, 0 => 否, 1 => 是
+ispublic    tinyint(1)  是否对外开放, 0 => 否, 1 => 是
+createtime	int(10)		添加时间
+creator		varchar(32)	添加者
+lastoperate	int(10)		最后操作时间
+lastoperator	varchar(32)	最后操作者
+
+blog_roles(用户角色表)
+
+字段名称	字段类型	备注说明
+id		int(10)		主键ID
+name		varchar(50)	角色名称
+code		varchar(50)	角色code
+type		tinyint(2)	角色类型 0 => 前台角色， 1 => 后台角色
+description	varchar(300)	角色描述
+displayorder	tinyint(3)	排序值
+enabled		tinyint(1)	是否启用角色 0 => 否， 1 => 是
+createtime	int(10)		添加时间
+creator		varchar(32)	添加者
+lastoperate	int(10)		最后操作时间
+lastoperator	varchar(32)	最后操作者
+
+blog_user_roles(用户关联角色表)
+
+字段名称	字段类型	备注说明
+id		int(10)		主键ID
+uid		int(10)		用户ID
+roleid		int(10)		角色ID
+rolecode	varchar(50)	角色code
+createtime	int(10)		添加时间
+creator		varchar(32)	添加者
+lastoperate	int(10)		最后操作时间
+lastoperator	varchar(32)	最后操作者
+
+blog_authitems(权限项表)
+
+字段名称	字段类型	备注说明
+id		int(10)		主键ID
+parentid	int(10)		父项ID
+haschild	tinyint(1)	是否有子项
+code		varchar(255)	权限项code
+name		varchar(50)	权限项名称
+description	varchar(300)	权限项描述
+auth		text		权限子项配置{"atoms": {"C" :"添加","R" :"获取","U" :"更新","D" :"删除","L" :"列表","S" :"搜索","BC":"批量添加","BU":"批量添加"},"disabled":"BC,BU"}
+enabled		tinyint(1)	是否启用权限项 0 => 否， 1 => 是
+type        tinyint(1)  权限项类型 0 => 前台, 1 => 后台, 2 => 微信
+displayorder	tinyint(3)	排序值
+createtime	int(10)		添加时间
+creator		varchar(32)	添加者
+lastoperate	int(10)		最后操作时间
+lastoperator	varchar(32)	最后操作者
+
+blog_role_authitems(角色关联权限项表)
+
+字段名称	字段类型	备注说明
+id		int(10)		主键ID
+roleid		int(10)		角色ID
+itemid		int(10)		权限项ID
+auth		varchar(255)	角色权限
+createtime	int(10)		添加时间
+creator		varchar(32)	添加者
+lastoperate	int(10)		最后操作时间
+lastoperator	varchar(32)	最后操作者
+
+blog_user_authitems(用户关联权限项表)
+
+字段名称	字段类型	备注说明
+id		int(10)		主键ID
+uid		int(10)		用户ID
+itemid		int(10)		权限项ID
+auth		varchar(255)	用户权限
+createtime	int(10)		添加时间
+creator		varchar(32)	添加者
+lastoperate	int(10)		最后操作时间
+lastoperator	varchar(32)	最后操作者
+
+blog_menus(网站菜单表)
+
+字段名称	字段类型	备注说明
+id		int(10)		主键ID
+parentid	int(10)		父菜单ID
+haschild	tinyint(1)	是否有子级菜单
+name		varchar(50)	菜单名称
+code		varchar(255)	菜单code
+url		varchar(255)	访问地址
+auth		text		菜单所需权限{"school.student": "C,L","school.teacher": "L"}
+type		tinyint(1)	菜单类型, 0 => 前台菜单, 1 => 后台菜单, 2 => 微信菜单
+enabled		tinyint(1)	是否启用, 0 => 否， 1 => 是
+displayorder	tinyint(3)	排序值
+createtime	int(10)		添加时间
+creator		varchar(32)	添加者
+lastoperate	int(10)		最后操作时间
+lastoperator	varchar(32)	最后操作者
+
+blog_ips(IP限制表)
+
+字段名称    字段类型    备注说明
+id          int(10)     主键ID
+ip          int(10)     限制的IP地址
+expire      int(10)     过期时间
+createtime	int(10)		添加时间
+creator		varchar(32)	添加者
+lastoperate	int(10)		最后操作时间
+lastoperator	varchar(32)	最后操作者
+
+blog_loginlogs(登陆日志表)
+
+字段名称    字段类型    备注说明
+id          int(10)     主键ID
+username    varchar(32) 登陆人
+logintime   int(10)     登陆时间
+loginip     int(10)     登陆IP
+status      tinyint(1)  登陆状态 0 => 成功, 1 => 失败
+cause       varchar(255)登陆失败原因
+type        tinyint(1)  用户类型 0 => 前台用户, 1 => 后台用户
+origin      tinyint(1)  登陆来源 0 => 前台, 1 => 后台, 2 => 微信
+agent       varchar(255)客户端代理
+
+blog_blacklists(黑名单表)
+
+字段名称    字段类型    备注说明
+id          int(10)     主键ID
+uid         int(10)     用户ID
+username    varchar(32) 用户名
+type        tinyint(1)  禁用类型, 0 => 所有功能, 1 => 前台功能, 2 => 后台功能, 3 => 微信功能
+cause       varchar(255)加入黑名单原因
+createtime	int(10)		添加时间
+creator		varchar(32)	添加者
+lastoperate	int(10)		最后操作时间
+lastoperator	varchar(32)	最后操作者
+
+blog_msgs(用户留言表)
+
+字段名称    字段类型    备注说明
+id          int(10)     主键ID
+uid         int(10)     用户ID
+username    varchar(32) 用户名
+content     text        留言内容
+replytime   int(10)     回复时间
+replyid     int(10)     回复人
+replyname   varchar(32) 回复人姓名
+isreply     tinyint(1)  是否已回复, 0 => 否, 1 => 是
+reply       varchar(255)回复内容
+status      tinyint(1)  阅读状态, 0 => 未阅读, 1 => 管理员已阅读留言, 2 => 管理员已回复留言 3 => 留言人已查看回复内容
+createtime	int(10)		添加时间
+creator		varchar(32)	添加者
+lastoperate	int(10)		最后操作时间
+lastoperator	varchar(32)	最后操作者
+
+blog_adverts(公告表)
+
+字段名称    字段类型    备注说明
+id          int(10)     主键ID
+name        varchar(255)广告名
+cover       varchar(255)封面图地址
+url         varchar(255)跳转地址
+spot        tinyint(1)  显示位置, 0 => 文章列表页, 1 => 文章内容页, 2 => 首页
+price       float(5,2)  广告费用
+pricetype   tinyint(1)  费用类型, 0 => 常规, 1 => 试用, 2 => 优惠, 3 => 续费, 4 => 免费
+starttime   int(10)     广告显示开始时间
+endtime     int(10)     广告显示结束时间
+status      tinyint(1)  广告状态, 0 => 待显示, 1 => 显示中, 2 => 已到期, 3 => 已关闭
+cause       varchar(255)操作原因
+createtime	int(10)		添加时间
+creator		varchar(32)	添加者
+lastoperate	int(10)		最后操作时间
+lastoperator	varchar(32)	最后操作者
+
+blog_links(友情链接表)
+
+字段名称    字段类型    备注说明
+id          int(10)     主键ID
+name        varchar(255)链接名称
+url         varchar(255)链接地址
+enabled     tinyint(1)  是否启用 0 => 否, 1 => 是
+displayorder	tinyint(3)	排序值
+createtime	int(10)		添加时间
+creator		varchar(32)	添加者
+lastoperate	int(10)		最后操作时间
+lastoperator	varchar(32)	最后操作者
+
+blog_categorys(分类表)
+
+字段名称    字段类型    备注说明
+id          int(10)     主键ID
+parentid    int(10)     父ID
+name        varchar(32) 分类名称
+level       tinyint(1)  分类级别
+enabled     tinyint(1)  是否启用
+type        tinyint(1)  分类类别, 0 => 默认
+displayorder	tinyint(3)	排序值
+createtime	int(10)		添加时间
+creator		varchar(32)	添加者
+lastoperate	int(10)		最后操作时间
+lastoperator	varchar(32)	最后操作者
+
+blog_albums(相册表)
+
+字段名称    字段类型    备注说明
+id          int(10)     主键ID
+name        varchar(32) 相册名
+cover       varchar(255)封面图片
+photos      smallint(5) 相片数量
+enabled     tinyint(1)  是否启用
+displayorder	tinyint(3)	排序值
+createtime	int(10)		添加时间
+creator		varchar(32)	添加者
+lastoperate	int(10)		最后操作时间
+lastoperator	varchar(32)	最后操作者
+
+blog_photos(相片表)
+
+字段名称    字段类型    备注说明
+id          int(10)     主键ID
+albumid     int(10)     相册ID
+name        varchar(100)相片名称
+url         varchar(255)相片地址
+description varchar(500)相片描述
+liked       int(10)     点赞数
+click       int(10)     点击数
+createtime	int(10)		添加时间
+creator		varchar(32)	添加者
+lastoperate	int(10)		最后操作时间
+lastoperator	varchar(32)	最后操作者
+
+blog_notices(公告表)
+
+字段名称    字段类型    备注说明
+id          int(10)     主键ID
+title       varchar(100)标题
+content     text        内容
+sendid      int(10)     发布人ID
+sendname    varchar(32) 发布人名称
+status      tinyint(1)  公告状态 0 => 待显示, 1 => 显示中, 2 => 预显示, 3 => 已关闭
+showtime    int(10)     显示时间
+createtime	int(10)		添加时间
+creator		varchar(32)	添加者
+lastoperate	int(10)		最后操作时间
+lastoperator	varchar(32)	最后操作者
+
+blog_tags(标签表)
+
+字段名称    字段类型    备注说明
+id          int(10)     主键ID
+name        varchar(32) 标签名
+enabled     tinyint(1)  是否启用 0 => 否, 1 => 是
+createtime	int(10)		添加时间
+creator		varchar(32)	添加者
+lastoperate	int(10)		最后操作时间
+lastoperator	varchar(32)	最后操作者
+
+blog_comments(文章评论表)
+
+字段名称    字段类型    备注说明
+id          int(10)     主键ID
+articleid   int(10)     文章ID
+content     varchar(255)评论内容
+uid         int(10)     评论人ID
+istop       tinyint(1)  置顶评论 0 => 否, 1 => 是
+isshow      tinyint(1)  是否显示 0 => 否, 1 => 是
+createtime	int(10)		添加时间
+creator		varchar(32)	添加者
+lastoperate	int(10)		最后操作时间
+lastoperator	varchar(32)	最后操作者
+
+blog_comment_replys(评论回复表)
+
+字段名称    字段类型    备注说明
+id          int(10)     主键ID
+commentid   int(10)     评论ID
+content     varchar(255)回复内容
+uid         int(10)     回复人ID
+isshow      tinyint(1)  是否显示 0 => 否, 1 => 是
+createtime	int(10)		添加时间
+creator		varchar(32)	添加者
+lastoperate	int(10)		最后操作时间
+lastoperator	varchar(32)	最后操作者
+
+blog_articles(文章表)
+
+字段名称    字段类型    备注说明
+id          int(10)     主键ID
+menuid      int(10)     菜单ID,前台菜单
+categoryid  int(10)     分类ID
+cover       varchar(255) 封面图
+title       varchar(50) 文章标题
+content     text        文章内容
+come      varchar(255)文章来源
+ispublic    tinyint(1)  是否公开, 0 => 否, 1 => 是
+status      tinyint(1)  文章状态, 0 => 正常, 1 => 草稿, 2 => 删除
+author      varchar(32) 文章作者, 默认为当前发布人
+visitcount  smallint(5) 浏览数
+commentcount smallint(5) 评论数
+downloadcount smallint(5) 下载数
+iscomment   tinyint(1)  是否允许评论 0 => 否, 1 => 是
+attachment  varchar(255) 附件地址
+coin        tinyint(3)  所需禹译币
+createtime	int(10)		添加时间
+creator		varchar(32)	添加者
+lastoperate	int(10)		最后操作时间
+lastoperator	varchar(32)	最后操作者
+
+blog_article_tags(文章标签表)
+
+字段名称    字段类型    备注说明
+id          int(10)     主键ID
+articleid   int(10)     文章ID
+tagid       int(10)     标签ID
+createtime	int(10)		添加时间
+creator		varchar(32)	添加者
+lastoperate	int(10)		最后操作时间
+lastoperator	varchar(32)	最后操作者

@@ -1,0 +1,25 @@
+{% include "header.phtml" %}
+</ul>
+</div>
+<div class="formbody">
+    <form action="{{url('website/post')}}{{cond}}" method="post" id="myform">
+        <ul class="forminfo">
+            <li><label for="name">网站名称</label><input id="name" name="name" value="{% if isset(file['name']) %}{{file['name']}}{% endif %}" type="text" class="dfinput" /></li>
+            <li><label for="title">网站标语</label><input id="title" name="title" value="{% if isset(file['title']) %}{{file['title']}}{% endif %}" type="text" class="dfinput" /></li>
+            <li><label for="time">创办时间</label><input type="text" class="dfinput" value="{% if isset(file['time']) %}{{file['time']}}{% endif %}" name="time" id="time"/></li>
+            <li><label for="copyright">版权信息</label><input id="copyright" name="copyright" value="{% if isset(file['copyright']) %}{{file['copyright']}}{% endif %}" type="text" class="dfinput" /></li>
+            <li><label for="beian">工信备案</label><input id="beian" name="beian" value="{% if isset(file['beian']) %}{{file['beian']}}{% endif %}" type="text" class="dfinput" /></li>
+            <li><label for="gongan">公安备案</label><input id="gongan" name="gongan" value="{% if isset(file['gongan']) %}{{file['gongan']}}{% endif %}" type="text" class="dfinput" /></li>
+
+            <li><label>&nbsp;</label><input name="" type="submit" id="btn" {% if !isSetBut %} title='禁止操作' disabled="disabled" style="cursor:not-allowed;background-image:none;background-color:#ddd;" {% endif %} id="btn" class="btn" value="确认保存"/><input style="margin-left: 68px;" name="" type="reset" class="btn" value="重置信息"/></li>
+        </ul>
+    </form>
+</div>
+<script type="text/javascript" src="{{static_url('assets')}}/js/jquery.js"></script>
+<script type="text/javascript" src="{{static_url('assets')}}/js/jquery.date.js"></script>
+<script type="text/javascript">
+    $(document).ready(function(){
+        $('#time').date_input();
+    });
+</script>
+{% include "footer.phtml" %}

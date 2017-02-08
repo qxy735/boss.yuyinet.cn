@@ -1,0 +1,172 @@
+{% include "header.phtml" %}
+    </ul>
+<ul class="operator">
+    {% if isCreateBut %}<li><span><img src="{{static_url('assets')}}/images/t01.png" /></span><a href="{{url('adminuser/create')}}{{cond}}">添加用户</a></li>{% endif %}
+    {% if isBatchDeleteBut %}<li id="batchdelbut"><span><img src="{{static_url('assets')}}/images/t03.png" /></span>批量删除</li>{% endif %}
+    <li><span><img src="{{static_url('assets')}}/images/t04.png" /></span><a href="{{url('adminuser/list')}}{{cond}}">刷新</a></li>
+</ul>
+</div>
+<div class="rightinfo">
+    <div class="tools">
+        <form action="{{url('adminuser/list')}}" method="post">
+            <ul class="search">
+                <li><label for="username">用户名</label><b>:</b><input type="text" value="{{userName}}" name="username" id="username"/></li>
+                <li><label for="status">用户状态</label><b>:</b>
+                    <select id="status" name="status">
+                        <option value="-1">全部</option>
+                        {% for index,name in status %}
+                            <option value="{{index}}" {% if index == statu %} selected="selected" {% endif %}>{{name}}</option>
+                        {% endfor %}
+                    </select>
+                </li>
+                <li><input type="hidden" name="navid" value="{{navId}}"/><input type="submit" value="搜索" class="search-but"/></li>
+            </ul>
+        </form>
+    </div>
+    <table class="tablelist">
+        <thead>
+        <tr>
+            <th><input name="" type="checkbox" value="" class="checkbut"/></th>
+            <th>序号</th>
+            <th>ID</th>
+            <th>头像</th>
+            <th>用户名</th>
+            <th>类型</th>
+            <th>角色</th>
+            <th>状态</th>
+            <th>注册IP</th>
+            <th>注册时间</th>
+            <th>登陆IP</th>
+            <th>登陆时间</th>
+            <th>操作</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for index,user in users %}
+        <tr>
+            <td><input name="userid"  class="checkinput" type="checkbox" value="{{user['id']}}" /></td>
+            <td>{{index+1}}</td>
+            <td>{{user['id']}}</td>
+            <td>{% if user['savatar'] %}<img src="{{user['savatar']}}" style="border: 1px solid #eeeeee; border-radius: 50%;"/>{% endif %}</td>
+            <td>{{user['username']}}</td>
+            <td>{{user['typename']}}</td>
+            <td>
+                {% if user['role'] %}
+                <span class="tablelink {% if isSetBut and (delStatus != user['statusid'])%} setrole{% endif %}" {% if isSetBut and (delStatus != user['statusid'])%} style="cursor: pointer;"{% else %}style="cursor: not-allowed;" title="禁止操作"{% endif %}  val="{{user['id']}}">
+                {% for roleName in user['role'] %}
+                {{roleName}}&nbsp;
+                {% endfor %}
+                </span>
+                {% else %}
+                {% if isSetBut %}<span class="tablelink {% if delStatus != user['statusid']%}setrole{% endif %}" {% if delStatus != user['statusid']%}style="cursor: pointer;"{% else %} style="cursor: not-allowed;" title="禁止操作" {% endif %}  val="{{user['id']}}">设置角色</span>{% endif %}
+                {% endif %}
+            </td>
+            <td>{{user['status']}}</td>
+            <td>{{user['regip']}}</td>
+            <td>{{user['regtime']}}</td>
+            <td>{{user['loginip']}}</td>
+            <td>{{user['logintime']}}</td>
+            <td>
+                {% if isSendBut and (normalStatus == user['statusid'])%}<a  href="{{url('/adminuser/msg')}}/uid/{{user['id']}}/page/{{page['page']}}{{cond}}" class="tablelink">发消息</a>|{% endif %}
+                <a href="{{url('/adminuser/auth')}}/uid/{{user['id']}}/page/{{page['page']}}{{cond}}" class="tablelink">权限项</a>|
+                <a href="{{url('/adminuser/profile')}}/id/{{user['id']}}/page/{{page['page']}}{{cond}}" class="tablelink">详情</a>
+                {% if isPasswdBut %}|<a {% if delStatus != user['statusid']%} href="{{url('/adminuser/password')}}/id/{{user['id']}}/page/{{page['page']}}{{cond}}"{% else %}href="javascript:void(0);"style="cursor:not-allowed;" title="禁止操作"{% endif %} class="tablelink">修改密码</a>|{% endif %}
+                {% if isSetBut %}<span class="tablelink setstatus" style="cursor: pointer;display: inline;"  val="{{user['id']}}">状态设置</span>{% endif %}
+                {% if isDeleteBut and (delStatus != user['statusid']) %}|<a href="{{url('/adminuser/delete')}}/id/{{user['id']}}{{cond}}" class="tablelink">删除</a>
+                {% endif %}
+            </td>
+        </tr>
+        <div class="tip" id="role_{{user['id']}}">
+            <form action="{{url('/adminuser/setrole')}}/page/{{page['page']}}{{cond}}" method="post">
+                <div class="tiptop"><span>设置用户角色({{user['username']}})</span><a onclick="hideTip('#role_{{user['id']}}')"></a></div>
+                <div class="tipinfo">
+                    <div class="tipright">
+                        {% for role in roles %}
+                        <input  style="vertical-align: middle;" type="checkbox" name="role[]" value="{{role['id']}}-{{role['code']}}" {% for roleId in user['roleid']%}{% if roleId == role['id'] %}checked="checked"{% endif %}{% endfor %}>&nbsp;{{role['name']}}&nbsp;&nbsp;&nbsp;
+                        {% endfor %}
+                    </div>
+                </div>
+                <div class="tipbtn">
+                    <input type="hidden" name="uid" value="{{user['id']}}"/>
+                    <input name="" type="submit"  class="sure" value="确定" />&nbsp;
+                    <input name="" type="button"  class="cancel" value="取消" onclick="hideTip('#role_{{user['id']}}')" />
+                </div>
+            </form>
+        </div>
+        <div class="tip" id="status_{{user['id']}}">
+            <form action="{{url('/adminuser/setstatus')}}/page/{{page['page']}}{{cond}}" method="post">
+                <div class="tiptop"><span>设置用户状态({{user['username']}})</span><a onclick="hideTip('#status_{{user['id']}}')"></a></div>
+                <div class="tipinfo">
+                    <div class="tipright">
+                        {% for statuId,statu in status %}
+                        <input  style="vertical-align: middle;" type="radio" name="ustatus" value="{{statuId}}" {% if user['statusid'] == statuId %}checked="checked"{% endif %}>&nbsp;{{statu}}&nbsp;&nbsp;&nbsp;
+                        {% endfor %}
+                    </div>
+                </div>
+                <div class="tipbtn">
+                    <input type="hidden" name="uid" value="{{user['id']}}"/>
+                    <input name="" type="submit"  class="sure" value="确定" />&nbsp;
+                    <input name="" type="button"  class="cancel" value="取消" onclick="hideTip('#status_{{user['id']}}')" />
+                </div>
+            </form>
+        </div>
+        {% endfor %}
+        </tbody>
+    </table>
+    <div class="pagin">
+        {% if page['num'] %}
+        <div class="message">共<i class="blue">{{page['total']}}</i>条记录，当前显示第&nbsp;<i class="blue">{{page['page']}}&nbsp;</i>页</div>
+        <ul class="paginList">
+            <li class="paginItem"><a href="{{url('/adminuser/list/page/')}}{{page['before']}}{{cond}}"><span class="pagepre"></span></a></li>
+            {% for index in 1..page['num'] %}
+            {% if page['page'] == index %}
+            <li class="paginItem current"><a href="{{url('/adminuser/list/page/')}}{{index}}{{cond}}">{{index}}</a></li>
+            {% else %}
+            <li class="paginItem"><a href="{{url('/adminuser/list/page/')}}{{index}}{{cond}}">{{index}}</a></li>
+            {% endif %}
+            {% endfor %}
+            <li class="paginItem"><a href="{{url('/adminuser/list/page/')}}{{page['next']}}{{cond}}"><span class="pagenxt"></span></a></li>
+        </ul>
+        {% else %}
+        <p align="center">暂无记录...</p>
+        {% endif %}
+    </div>
+</div>
+<script type="text/javascript" src="{{static_url('assets')}}/js/jquery.js"></script>
+<script type="text/javascript">
+    $(document).ready(function(){
+        $(".setrole").click(function(){
+            var userId = this.getAttribute('val');
+            $("#role_" + userId).fadeIn(200);
+        });
+        $(".setstatus").click(function(){
+            var userId = this.getAttribute('val');
+            $("#status_" + userId).fadeIn(200);
+        });
+        $('.checkbut').click(function(){
+            $('.checkinput').attr("checked",$(this).is(':checked'));
+        });
+
+        $('#batchdelbut').click(function(){
+            var ids = '';
+
+            $(".checkinput:checked").each(function(i, n){
+                ids += $(this).val() + ',';
+            });
+
+            if(!ids){
+                alert('请先选择需要删除的用户!');
+            }else{
+                location.href = '/adminuser/delete/{{cond}}/id/' + ids;
+            }
+        })
+    });
+
+    function hideTip(name)
+    {
+        $(name).fadeOut(200);
+    }
+
+    $('.tablelist tbody tr:odd').addClass('odd');
+</script>
+{% include "footer.phtml" %}

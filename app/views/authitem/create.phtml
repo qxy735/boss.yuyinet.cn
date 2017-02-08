@@ -1,0 +1,56 @@
+{% include "header.phtml" %}
+        <li><a href="{{url('authitem/create')}}{{cond}}">添加权限项</a></li>
+    </ul>
+</div>
+<div class="formbody">
+    <form action="{{url('authitem/post')}}{{cond}}" method="post">
+        <ul class="forminfo">
+            <li>
+                <label for="parentid">权限项归属</label>
+                <select name="parentid" id="parentid">
+                    <option value="0">顶级权限项</option>
+                    {% for item in items %}
+                        <option value="{{item['id']}}">{{item['name']}}</option>
+                    {% endfor %}
+                </select>
+            </li>
+            <li>
+                <label for="type">权限项类型</label>
+                <select name="type" id="type">
+                    {% for index,typeName in types %}
+                    <option value="{{index}}">{{typeName}}</option>
+                    {% endfor %}
+                </select>
+            </li>
+            <li><label for="name">权限项名称</label><input id="name" name="name" value="" type="text" class="dfinput" /></li>
+            <li><label for="code">权限项code</label><input id="code" name="code" value="" type="text" class="dfinput" /></li>
+            <li><label>是否有子项</label><cite>{% for index,authItemChild in authItemChilds %}<input name="haschild" type="radio" value="{{index}}" {% if isNotHas == index %}checked="checked"{% endif %}/>&nbsp;{{authItemChild}}&nbsp;&nbsp;&nbsp;&nbsp;{% endfor %}</cite></li>
+            <li><label>是否启用</label><cite>{% for index,authItemEnable in authItemEnables %}<input name="enabled" type="radio" value="{{index}}" {% if enabled == index %}checked="checked"{% endif %}/>&nbsp;{{authItemEnable}}&nbsp;&nbsp;&nbsp;&nbsp;{% endfor %}</cite></li>
+            <li><label for="displayorder">排序值</label><input id="displayorder" name="displayorder" type="text" class="dfinput" value="255" /></li>
+            <li><label for="auth">原子项配置</label><textarea name="auth" class="dfinput" style="resize: none;height: 100px;" placeholder='例如:{"atoms": {"C" :"添加","R" :"获取","U" :"更新","D" :"删除","L" :"列表","S" :"搜索","BC":"批量添加","BU":"批量添加"},"disabled":"BC,BU"}'></textarea></li>
+            <li><label for="description">权限项描述</label><textarea name="description" class="dfinput" style="resize: none;height: 100px;"></textarea></li>
+            <li><label>&nbsp;</label><input name="" type="submit" id="btn" class="btn" value="确认保存"/><input style="margin-left: 68px;" name="" type="reset" class="btn" value="重置信息"/></li>
+        </ul>
+    </form>
+</div>
+<script type="text/javascript">
+    var btn = document.getElementById('btn');
+
+    btn.onclick = function(){
+        var name = document.getElementById('name');
+        var code = document.getElementById('code');
+
+        if('' == name.value){
+            alert('权限项名称必填!');
+            return false;
+        }
+
+        if('' == code.value){
+            alert('权限项code必填!');
+            return false;
+        }
+
+        return true;
+    }
+</script>
+{% include "footer.phtml" %}

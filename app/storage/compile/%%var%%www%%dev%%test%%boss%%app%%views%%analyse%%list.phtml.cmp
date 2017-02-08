@@ -1,0 +1,92 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>禹译后台管理系统</title>
+    <link href="<?php echo $this->url->getStatic('assets'); ?>/css/style.css" rel="stylesheet" type="text/css" />
+    <link href="<?php echo $this->url->getStatic('assets'); ?>/ueditor/themes/default/css/umeditor.css" type="text/css" rel="stylesheet">
+</head>
+<body>
+<div class="place">
+    <span>位置：</span>
+    <ul class="placeul">
+        <li><a href="<?php echo $this->url->get('/'); ?>" target="_parent">首页</a></li>
+        <li><?php if ($navTopMenu) { ?><?php echo $navTopMenu['name']; ?><?php } else { ?>幽灵菜单<?php } ?></li>
+        <?php if ($navSonMenu) { ?>
+        <li><a href="<?php echo $navSonMenu['url']; ?><?php echo $cond; ?>"><?php echo $navSonMenu['name']; ?></a></li>
+        <?php } else { ?>
+        <li>幽灵菜单</a></li>
+        <?php } ?>
+</ul>
+</div>
+<div class="rightinfo">
+    <div class="tools" style="float: left;">
+        <form action="<?php echo $this->url->get('analyse/list'); ?>" method="post">
+            <ul class="search">
+                <li><label for="option">分析项</label><b>:</b>
+                    <select id="option" name="option" style="width: 150px;">
+                        <?php foreach ($options as $index => $optionName) { ?>
+                        <option value="<?php echo $index; ?>" <?php if ($index == $option) { ?>selected="selected"<?php } ?>><?php echo $optionName; ?></option>
+                        <?php } ?>
+                    </select>
+                </li>
+                <li>
+                    <input type="hidden" name="navid" value="<?php echo $navId; ?>"/>
+                    <input type="submit" value="分析" style="width: 80px;cursor: pointer;"/>
+                </li>
+            </ul>
+        </form>
+    </div>
+    <div style="clear: both;border: 1px solid #dddddd;margin: 60px;padding: 30px;text-align: center;">
+        <canvas id="cvs" width="480" height="250" !style="border:1px solid #ccc">[浏览器版本过低,无法渲染分析结果]</canvas>
+    </div>
+</div>
+<script type="text/javascript" src="<?php echo $this->url->getStatic('assets'); ?>/js/jquery.js"></script>
+<script src="<?php echo $this->url->getStatic('assets'); ?>/graph/RGraph.common.core.js" ></script>
+<script src="<?php echo $this->url->getStatic('assets'); ?>/graph/RGraph.common.tooltips.js" ></script>
+<script src="<?php echo $this->url->getStatic('assets'); ?>/graph/RGraph.common.dynamic.js" ></script>
+<script src="<?php echo $this->url->getStatic('assets'); ?>/graph/RGraph.pie.js" ></script>
+<!--[if lt IE 9]><script src="<?php echo $this->url->getStatic('assets'); ?>/graph/excanvas.js"></script><![endif]-->
+<script type="text/javascript">
+    window.onload = function ()
+    {
+        var data = <?php echo $datas; ?>;
+
+        var pie = new RGraph.Pie('cvs', data)
+            .Set('labels', <?php echo $lables; ?>)
+            .Set('tooltips', <?php echo $tips; ?>)
+            .Set('tooltips.event', 'onmousemove')
+            .Set('colors', <?php echo $colors; ?>)
+            .Set('strokestyle', 'white')
+            .Set('linewidth', 3)
+            .Set('shadow', true)
+            .Set('shadow.offsetx', 2)
+            .Set('shadow.offsety', 2)
+            .Set('shadow.blur', 3)
+            .Set('exploded', 7)
+            .Set('title', '<?php echo $title; ?>')
+
+        for (var i=0; i<data.length; ++i) {
+            pie.Get('labels')[i] = pie.Get('labels')[i] + ' (' + data[i] + '%)';
+        }
+
+        pie.Draw();
+    }
+</script>
+<script type="text/javascript">
+    var links = document.links;
+
+    for(var i= 0,l=links.length; i < l; i++){
+        links[i].onclick = function(){
+            if(-1 == document.cookie.indexOf('admin_user=')){
+                parent.location.href = '/auth/login';
+
+                return false;
+            }
+
+            return true;
+        }
+    }
+</script>
+</body>
+</html>

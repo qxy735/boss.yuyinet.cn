@@ -1,0 +1,160 @@
+{% include "header.phtml" %}
+</ul>
+<ul class="operator">
+    {% if isCreateBut %}<li><span><img src="{{static_url('assets')}}/images/t01.png" /></span><a href="{{url('article/create')}}{{cond}}">添加文章</a></li>{% endif %}
+    {% if isBatchDeleteBut %}<li id="batchdelbut"><span><img src="{{static_url('assets')}}/images/t03.png" /></span>批量删除</li>{% endif %}
+    <li><span><img src="{{static_url('assets')}}/images/t04.png" /></span><a href="{{url('article/list')}}{{cond}}">刷新</a></li>
+</ul>
+</div>
+<div class="rightinfo">
+    <div class="tools">
+        <form action="{{url('article/list')}}" method="post">
+            <ul class="search">
+                <li><label for="title">标题</label><b>:</b><input type="text" style="width: 100px;" value="{{title}}" name="title" id="title"/></li>
+                <li><label for="menuid">归属菜单</label><b>:</b>
+                    <select id="menuid" name="menuid">
+                        <option value="-1">全部</option>
+                        {% for menu in menus %}
+                        <option value="{{menu['id']}}" {% if (menu['id'] == menuId) %} selected="selected" {% endif %} >{{menu['name']}}</option>
+                        {% endfor %}
+                    </select>
+                </li>
+                <li><label for="cid">分类</label><b>:</b>
+                    <select id="cid" name="cid">
+                        <option value="-1">全部</option>
+                        {% for topCategory in topCategorys %}
+                        <option value="{{topCategory['id']}}" {% if (topCategory['id'] == cId) %} selected="selected" {% endif %}>{{topCategory['name']}}</option>
+                        {% for sonCategory in topCategory['son'] %}
+                        <option value="{{sonCategory['id']}}" {% if (sonCategory['id'] == cId) %} selected="selected" {% endif %}>&nbsp;&nbsp;&nbsp;{{sonCategory['name']}}</option>
+                        {% endfor %}
+                        {% endfor %}
+                    </select>
+                </li>
+                <li><label for="ispublic">是否公开</label><b>:</b>
+                    <select id="ispublic" name="ispublic">
+                        <option value="-1">全部</option>
+                        {% for index,name in publics %}
+                        <option value="{{index}}" {% if (index == ispublic) %} selected="selected" {% endif %} >{{name}}</option>
+                        {% endfor %}
+                    </select>
+                </li>
+                <li><label for="iscomment">允许评论</label><b>:</b>
+                    <select id="iscomment" name="iscomment">
+                        <option value="-1">全部</option>
+                        {% for index,name in comments %}
+                        <option value="{{index}}" {% if (index == iscomment) %} selected="selected" {% endif %} >{{name}}</option>
+                        {% endfor %}
+                    </select>
+                </li>
+                <li><label for="status">状态</label><b>:</b>
+                    <select id="status" name="status">
+                        <option value="-1">全部</option>
+                        {% for index,name in status %}
+                        <option value="{{index}}" {% if (index == statu) %} selected="selected" {% endif %} >{{name}}</option>
+                        {% endfor %}
+                    </select>
+                </li>
+                <li><input type="hidden" name="navid" value="{{navId}}"/><input type="submit" value="搜索" class="search-but"/></li>
+            </ul>
+        </form>
+    </div>
+    <table class="tablelist">
+        <thead>
+        <tr>
+            <th><input name="" type="checkbox" value="" class="checkbut"/></th>
+            <th>序号</th>
+            <th>ID</th>
+            <th>所属菜单</th>
+            <th>分类</th>
+            <th>封面</th>
+            <th>标题</th>
+            <th>标签</th>
+            <th>来源</th>
+            <th>是否公开</th>
+            <th>状态</th>
+            <th>作者</th>
+            <th>访问量</th>
+            <th>评论数</th>
+            <th>下载数</th>
+            <th>允许评论</th>
+            <th>访问币</th>
+            <th>操作</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for index,article in articles %}
+        <tr>
+            <td><input name="id"  class="checkinput" type="checkbox" value="{{article['id']}}" /></td>
+            <td>{{index+1}}</td>
+            <td>{{article['id']}}</td>
+            <td>{{article['menuname']}}</td>
+            <td>{{article['cname']}}</td>
+            <td>{% if article['cover'] %}<img src="{{article['cover']}}" width="50"/>{% endif %}</td>
+            <td>{{article['title']}}</td>
+            <td>{{article['tag']}}</td>
+            <td>{{article['come']}}</td>
+            <td>{{article['ispublicname']}}</td>
+            <td>{{article['statusname']}}</td>
+            <td>{{article['author']}}</td>
+            <td>{{article['visitcount']}}</td>
+            <td>{{article['commentcount']}}</td>
+            <td>{{article['downloadcount']}}</td>
+            <td>{{article['iscommentname']}}</td>
+            <td>{{article['coin']}}&nbsp;<img src="{{static_url('assets')}}/images/rmb.gif" style="vertical-align: middle;"/></td>
+            <td>
+                {% if isUpdateBut %}<a href="{{url('/article/edit')}}/id/{{article['id']}}/page/{{page['page']}}{{cond}}" class="tablelink">编辑</a>{% endif %}
+                {% if isSetBut %}|
+                    {% if defaultPublic == article['ispublic'] %}
+                        <a href="{{url('/article/private')}}/id/{{article['id']}}/page/{{page['page']}}{{cond}}" class="tablelink">不公开</a>
+                    {% else %}
+                        <a href="{{url('/article/public')}}/id/{{article['id']}}/page/{{page['page']}}{{cond}}" class="tablelink">公开</a>
+                    {% endif %}
+                {% endif %}
+                {% if isDeleteBut and (delStatus != article['status']) %}|<a href="{{url('/article/delete')}}/id/{{article['id']}}{{cond}}" class="tablelink">删除</a>{% endif %}
+            </td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    <div class="pagin">
+        {% if page['num'] %}
+        <div class="message">共<i class="blue">{{page['total']}}</i>条记录，当前显示第&nbsp;<i class="blue">{{page['page']}}&nbsp;</i>页</div>
+        <ul class="paginList">
+            <li class="paginItem"><a href="{{url('/article/list/page/')}}{{page['before']}}{{cond}}"><span class="pagepre"></span></a></li>
+            {% for index in 1..page['num'] %}
+            {% if page['page'] == index %}
+            <li class="paginItem current"><a href="{{url('/article/list/page/')}}{{index}}{{cond}}">{{index}}</a></li>
+            {% else %}
+            <li class="paginItem"><a href="{{url('/article/list/page/')}}{{index}}{{cond}}">{{index}}</a></li>
+            {% endif %}
+            {% endfor %}
+            <li class="paginItem"><a href="{{url('/article/list/page/')}}{{page['next']}}{{cond}}"><span class="pagenxt"></span></a></li>
+        </ul>
+        {% else %}
+        <p align="center">暂无记录...</p>
+        {% endif %}
+    </div>
+</div>
+<script type="text/javascript" src="{{static_url('assets')}}/js/jquery.js"></script>
+<script type="text/javascript">
+    $(document).ready(function(){
+        $('.checkbut').click(function(){
+            $('.checkinput').attr("checked",$(this).is(':checked'));
+        });
+        $('#batchdelbut').click(function(){
+            var ids = '';
+
+            $(".checkinput:checked").each(function(i, n){
+                ids += $(this).val() + ',';
+            });
+
+            if(!ids){
+                alert('请先选择需要删除的文章!');
+            }else{
+                location.href = '/article/delete/{{cond}}/id/' + ids;
+            }
+        })
+    });
+    $('.tablelist tbody tr:odd').addClass('odd');
+</script>
+{% include "footer.phtml" %}

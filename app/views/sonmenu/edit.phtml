@@ -1,0 +1,40 @@
+{% include "header.phtml" %}
+        <li><a href="{{url('sonmenu/list/parentid/')}}{{parentId}}{{curcond}}">子菜单</a></li>
+        <li><a href="{{url('sonmenu/edit')}}/parentid/{{parentId}}/id/{{menu['id']}}{{curcond}}">编辑菜单</a></li>
+    </ul>
+</div>
+<div class="formbody">
+    <form action="{{url('sonmenu/save')}}{{curcond}}" method="post">
+        <ul class="forminfo">
+            <li>
+                <label for="parentid">菜单归属</label>
+                <select name="parentid" id="parentid">
+                    <option value="0">顶级菜单</option>
+                    {% for topMenu in topMenus %}
+                    <option value="{{topMenu['id']}}" {% if topMenu['id'] == menu['parentid'] %}selected='selected'{% endif %}>{{topMenu['name']}}</option>
+                    {% endfor %}
+                </select>
+                {% for index,econd in conds %}
+                <input type="hidden" name="{{index}}" value="{{econd}}"/>
+                {% endfor %}
+            </li>
+            <li>
+                <label for="type">菜单类型</label>
+                <select name="type" id="type">
+                    {% for index,name in types %}
+                    <option value="{{index}}" {% if index == menu['type'] %}selected='selected'{% endif %}>{{name}}</option>
+                    {% endfor %}
+                </select>
+            </li>
+            <li><label for="name">菜单名称</label><input id="name" name="name" value="{{menu['name']}}" type="text" class="dfinput" /></li>
+            <li><label for="code">菜单code</label><input id="code" name="code" value="{{menu['code']}}" type="text" class="dfinput" /></li>
+            <li><label>是否有子菜单</label><cite><input name="haschild" type="radio" value="1" {% if 1 == menu['haschild'] %}checked="checked"{% endif %}/>&nbsp;是&nbsp;&nbsp;&nbsp;&nbsp;<input name="haschild" type="radio" value="0" {% if 0 == menu['haschild'] %}checked="checked"{% endif %}/>&nbsp;否</cite></li>
+            <li><label>是否启用</label><cite><input name="enabled" type="radio" value="1" {% if 1 == menu['enabled'] %}checked="checked"{% endif %}/>&nbsp;是&nbsp;&nbsp;&nbsp;&nbsp;<input name="enabled" type="radio" value="0" {% if 0 == menu['enabled'] %}checked="checked"{% endif %}/>&nbsp;否</cite></li>
+            <li><label for="url">菜单地址</label><input id="url" name="url" type="text" class="dfinput" value="{{menu['url']}}" /></li>
+            <li><label for="displayorder">排序值</label><input id="displayorder" name="displayorder" type="text" class="dfinput" value="{{menu['displayorder']}}" /></li>
+            <li><label for="auth">权限配置</label><textarea id="auth" name="auth" class="dfinput" style="resize: none;">{{menu['auth']}}</textarea></li>
+            <li><label>&nbsp;</label><input type="hidden" name="parentid" value="{{parentId}}"><input type="hidden" name="id" value="{{menu['id']}}"/><input name="" type="submit" id="btn" class="btn" value="确认保存"/><input style="margin-left: 68px;" name="" type="reset" class="btn" value="重置信息"/></li>
+        </ul>
+    </form>
+</div>
+{% include "footer.phtml" %}

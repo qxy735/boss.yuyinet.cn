@@ -1,0 +1,33 @@
+{% include "header.phtml" %}
+<li><a href="{{url('black/create')}}{{cond}}">添加黑名单</a></li>
+</ul>
+</div>
+<div class="formbody">
+    <form action="{{url('black/post')}}{{cond}}" method="post">
+        <ul class="forminfo">
+            <li>
+                <label for="type">禁用功能</label>
+                <select name="type" id="type">
+                    {% for index,name in types %}
+                    <option value="{{index}}">{{name}}</option>
+                    {% endfor %}
+                </select>
+            </li>
+            <li><label for="uid">用户ID</label><input id="uid" name="uid" value="" type="text" class="dfinput" /></li>
+            <li><label for="cause">原因</label><textarea id="cause" name="cause" class="dfinput" style="height: 150px;resize: none;"></textarea></li>
+            <li><label>&nbsp;</label><input name="" type="submit" class="btn" id="btn" value="确认保存"/><input style="margin-left: 68px;" name="" type="reset" class="btn" value="重置信息"/></li>
+        </ul>
+    </form>
+</div>
+<script type="text/javascript">
+    var btn = document.getElementById('btn');
+    btn.onclick = function(){
+        var uid = document.getElementById('uid');
+        if('' == uid.value){
+            alert('用户ID必填!');
+            return false;
+        }
+        return true;
+    }
+</script>
+{% include "footer.phtml" %}

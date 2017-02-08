@@ -1,0 +1,62 @@
+{% include "header.phtml" %}
+<li><a href="{{url('advert/create')}}{{cond}}">添加广告</a></li>
+</ul>
+</div>
+<div class="formbody">
+    <form action="{{url('advert/post')}}{{cond}}" method="post">
+        <ul class="forminfo">
+            <li><label for="name">广告名称</label><input id="name" name="name" value="" type="text" class="dfinput" /></li>
+            <li><label for="cover">封面地址</label><input id="cover" name="cover" value="" type="text" class="dfinput" /></li>
+            <li><label for="url">链接地址</label><input id="url" name="url" value="" type="text" class="dfinput" /></li>
+            <li>
+                <label for="spot">广告位置</label>
+                <select name="spot" id="spot">
+                    {% for index,name in spots %}
+                    <option value="{{index}}">{{name}}</option>
+                    {% endfor %}
+                </select>
+            </li>
+            <li><label for="price">广告价格</label><input id="price" name="price" value="" type="text" class="dfinput" /></li>
+            <li>
+                <label for="pricetype">价位类型</label>
+                <select name="pricetype" id="pricetype">
+                    {% for index,name in priceTypes %}
+                    <option value="{{index}}">{{name}}</option>
+                    {% endfor %}
+                </select>
+            </li>
+            <li><label for="starttime">显示开始时间</label><input type="text" value="" name="starttime" id="starttime" class="dfinput"/></li>
+            <li><label for="endtime">显示结束时间</label><input type="text" value="" name="endtime" id="endtime" class="dfinput"/></li>
+            <li><label>&nbsp;</label><input name="" type="submit" class="btn" id="btn" value="确认保存"/><input style="margin-left: 68px;" name="" type="reset" class="btn" value="重置信息"/></li>
+        </ul>
+    </form>
+</div>
+<script type="text/javascript" src="{{static_url('assets')}}/js/jquery.js"></script>
+<script type="text/javascript" src="{{static_url('assets')}}/js/jquery.date.js"></script>
+<script type="text/javascript">
+    $(function(){
+        $('#starttime').date_input();
+        $('#endtime').date_input();
+    });
+    var btn = document.getElementById('btn');
+    btn.onclick = function(){
+        var name = document.getElementById('name');
+        var cover = document.getElementById('cover');
+        var url = document.getElementById('url');
+
+        if('' == name.value){
+            alert('广告名称必填!');
+            return false;
+        }
+        if('' == cover.value){
+            alert('封面地址必填!');
+            return false;
+        }
+        if('' == url.value){
+            alert('链接地址必填!');
+            return false;
+        }
+        return true;
+    }
+</script>
+{% include "footer.phtml" %}

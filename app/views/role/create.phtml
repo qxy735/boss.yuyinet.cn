@@ -1,0 +1,44 @@
+{% include "header.phtml" %}
+        <li><a href="{{url('role/create')}}{{cond}}">添加角色</a></li>
+    </ul>
+</div>
+<div class="formbody">
+    <form action="{{url('role/post')}}{{cond}}" method="post">
+        <ul class="forminfo">
+            <li>
+                <label for="type">角色类型</label>
+                <select name="type" id="type">
+                    {% for index,roleType in roleTypes %}
+                    <option value="{{index}}">{{roleType}}</option>
+                    {% endfor %}
+                </select>
+            </li>
+            <li><label for="name">角色名称</label><input id="name" name="name" value="" type="text" class="dfinput" /></li>
+            <li><label for="code">角色code</label><input id="code" name="code" value="" type="text" class="dfinput" /></li>
+            <li><label>是否启用</label><cite>{% for index,roleEnable in roleEnables %}<input name="enabled" type="radio" value="{{index}}" {% if enabled == index %}checked="checked"{% endif %}/>&nbsp;{{roleEnable}}&nbsp;&nbsp;&nbsp;&nbsp;{% endfor %}</cite></li>
+            <li><label for="displayorder">排序值</label><input id="displayorder" name="displayorder" type="text" class="dfinput" value="255" /></li>
+            <li><label for="description">角色描述</label><textarea name="description" class="dfinput" style="resize: none;height: 100px;"></textarea></li>
+            <li><label>&nbsp;</label><input name="" type="submit" class="btn" id="btn" value="确认保存"/><input style="margin-left: 68px;" name="" type="reset" class="btn" value="重置信息"/></li>
+        </ul>
+    </form>
+</div>
+<script type="text/javascript">
+    var btn = document.getElementById('btn');
+    btn.onclick = function(){
+        var name = document.getElementById('name');
+        var code = document.getElementById('code');
+
+        if('' == name.value){
+            alert('角色名称必填!');
+            return false;
+        }
+
+        if('' == code.value){
+            alert('角色code必填!');
+            return false;
+        }
+
+        return true;
+    }
+</script>
+{% include "footer.phtml" %}

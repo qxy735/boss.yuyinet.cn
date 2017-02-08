@@ -1,0 +1,155 @@
+{% include "header.phtml" %}
+<li><a href="{{url('home/sendbox')}}{{curcond}}">我的发信箱</a></li>
+</ul>
+<ul class="operator">
+    {% if isBatchDeleteBut %}<li id="batchdelbut"><span><img src="{{static_url('assets')}}/images/t03.png" /></span>批量删除</li>{% endif %}
+    <li class="click"><span><img src="{{static_url('assets')}}/images/t04.png" /></span><a href="{{url('/home/sendbox')}}{{curcond}}">刷新</a></li>
+</ul>
+</div>
+<div class="rightinfo">
+    <div class="tools">
+        <form action="{{url('home/sendbox')}}" method="post">
+            <ul class="search">
+                <li><label for="title">标题</label><b>:</b><input type="text" value="{{title}}" name="title" id="title" style="width: 80px;"/></li>
+                <!--<li><label for="starttime">开始时间</label><b>:</b><input type="text" value="{{startTime}}" name="starttime" id="starttime" style="width: 65px;"/></li>
+                <li><label for="endtime">结束时间</label><b>:</b><input type="text" value="{{endTime}}" name="endtime" id="endtime" style="width: 65px;"/></li>-->
+                <li><label for="typeid">消息类型</label><b>:</b>
+                    <select id="typeid" name="typeid">
+                        <option value="-1">全部</option>
+                        {% for aMsgType in msgTypes %}
+                        <option value="{{aMsgType['id']}}" {% if aMsgType['id'] == typeId %}selected="selected"{% endif %}>{{aMsgType['name']}}</option>
+                        {% endfor %}
+                    </select>
+                </li>
+                <li><label for="msgtype">消息来源</label><b>:</b>
+                    <select id="msgtype" name="msgtype">
+                        <option value="-1">全部</option>
+                        {% for index,source in sources %}
+                        <option value="{{index}}" {% if index == msgType %}selected="selected"{% endif %}>{{source}}</option>
+                        {% endfor %}
+                    </select>
+                </li>
+                <li><label for="isfriend">好友信息</label><b>:</b>
+                    <select id="isfriend" name="isfriend">
+                        <option value="-1">全部</option>
+                        {% for index,isFriendValue in isFriends %}
+                        <option value="{{index}}" {% if index == isFriend %}selected="selected"{% endif %}>{{isFriendValue}}</option>
+                        {% endfor %}
+                    </select>
+                </li>
+                <li><input type="hidden" name="navid" value="{{navId}}"/><input type="submit" value="搜索" id="formbut" class="search-but"/></li>
+            </ul>
+        </form>
+    </div>
+    <table class="tablelist">
+        <thead>
+        <tr>
+            <th><input name="" type="checkbox" value="" class="checkbut"/></th>
+            <th>序号</th>
+            <th>ID</th>
+            <th>收信人</th>
+            <th>标题</th>
+            <th>内容</th>
+            <th>类型</th>
+            <th>来源</th>
+            <th>好友信息</th>
+            <th>发送时间</th>
+            <th>操作</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for index,message in messages %}
+        <tr>
+            <td><input name="checkinput" type="checkbox"  class="checkinput" value="{{message['id']}}" /></td>
+            <td>{{index+1}}</td>
+            <td>{{message['id']}}</td>
+            <td><a href="{{url('/home/posterlist')}}{{curcond}}/page/{{page['page']}}/messageid/{{message['id']}}" class="tablelink">查看</a></td>
+            <td>{{message['title']}}</td>
+            <td><a href="#" class="contbut tablelink" index="{{index}}">查看</a></td>
+            <td>{{message['typeid']}}</td>
+            <td>{{message['msgtype']}}</td>
+            <td>{{message['isfriend']}}</td>
+            <td>{{message['sendtime']}}</td>
+            <td>{% if isDeleteBut %}<a href="{{url('/home/delsendbox')}}{{curcond}}/id/{{message['id']}}" class="tablelink"> 删除</a>{% endif %}</td>
+        </tr>
+        <div class="tip conts">
+            <div class="tiptop"><span>标题 : {{message['title']}}</span><a class="close"></a></div>
+            <div class="tipinfo notice-content" style="margin: 0;padding: 10px;overflow-y: scroll;height: 195px;">
+                {{message['content']}}
+            </div>
+        </div>
+        {% endfor %}
+        </tbody>
+    </table>
+    <div class="pagin">
+        {% if page['num'] %}
+        <div class="message">共<i class="blue">{{page['total']}}</i>条记录，当前显示第&nbsp;<i class="blue">{{page['page']}}&nbsp;</i>页</div>
+        <ul class="paginList">
+            <li class="paginItem"><a href="{{url('/home/sendbox/page/')}}{{page['before']}}{{curcond}}"><span class="pagepre"></span></a></li>
+            {% for index in 1..page['num'] %}
+            {% if page['page'] == index %}
+            <li class="paginItem current"><a href="{{url('/home/sendbox/page/')}}{{index}}{{curcond}}">{{index}}</a></li>
+            {% else %}
+            <li class="paginItem"><a href="{{url('/home/sendbox/page/')}}{{index}}{{curcond}}">{{index}}</a></li>
+            {% endif %}
+            {% endfor %}
+            <li class="paginItem"><a href="{{url('/home/sendbox/page/')}}{{page['next']}}{{curcond}}"><span class="pagenxt"></span></a></li>
+        </ul>
+        {% else %}
+        <p align="center">暂无记录...</p>
+        {% endif %}
+    </div>
+</div>
+<script type="text/javascript" src="{{static_url('assets')}}/js/jquery.js"></script>
+<!--<script type="text/javascript" src="{{static_url('assets')}}/js/jquery.date.js"></script>-->
+<script type="text/javascript">
+    $(function(){
+        $('.tablelist tbody tr:odd').addClass('odd');
+        /*$('#starttime').date_input();
+        $('#endtime').date_input();
+        $('#formbut').click(function(){
+            var stime = $('#starttime').val();
+            var etime = $('#endtime').val();
+            if( stime && etime){
+                stime = Date.parse(new Date(stime)) / 1000;
+                etime = Date.parse(new Date(etime)) / 1000;
+                if(stime > etime){
+                    alert('结束时间必须大于开始时间');
+                    return false;
+                }
+            }
+            return true;
+        });*/
+
+        $('.checkbut').click(function(){
+            $('.checkinput').attr("checked",$(this).is(':checked'));
+        });
+
+        $('#batchdelbut').click(function(){
+            var ids = '';
+
+            $(".checkinput:checked").each(function(i, n){
+                ids += $(this).val() + ',';
+            });
+
+            if(!ids){
+                alert('请先选择需要删除的消息!');
+            }else{
+                location.href = '/home/delsendbox/{{curcond}}/id/' + ids;
+            }
+        })
+
+        $('.contbut').each(function(){
+            $(this).click(function(){
+                var i = $(this).attr('index');
+
+                $('.conts').eq(i).fadeIn(200);
+            });
+        });
+
+        $('.close').click(function(){
+            $('.conts').fadeOut(200);
+        });
+    });
+</script>
+{% include "footer.phtml" %}

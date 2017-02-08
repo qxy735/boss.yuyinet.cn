@@ -1,0 +1,89 @@
+{% include "header.phtml" %}
+</ul>
+<ul class="operator">
+    <li><span><img src="{{static_url('assets')}}/images/t04.png" /></span><a href="{{url('msg/list')}}{{cond}}">刷新</a></li>
+</ul>
+</div>
+<div class="rightinfo">
+    <div class="tools">
+        <form action="{{url('msg/list')}}" method="post">
+            <ul class="search">
+                <li><label for="username">留言人</label><b>:</b><input type="text" value="{{userName}}" name="username" id="username"/></li>
+                <li><label for="status">留言状态</label><b>:</b>
+                    <select id="status" name="status">
+                        <option value="-1">全部</option>
+                        {% for index,name in status %}
+                        <option value="{{index}}" {% if index == statu %} selected="selected" {% endif %}>{{name}}</option>
+                        {% endfor %}
+                    </select>
+                </li>
+                <li><label for="isreply">是否回复</label><b>:</b>
+                    <select id="isreply" name="isreply">
+                        <option value="-1">全部</option>
+                        {% for index,name in replys %}
+                        <option value="{{index}}" {% if index == isReply %} selected="selected" {% endif %}>{{name}}</option>
+                        {% endfor %}
+                    </select>
+                </li>
+                <li><input type="hidden" name="navid" value="{{navId}}"/><input type="submit" value="搜索" class="search-but"/></li>
+            </ul>
+        </form>
+    </div>
+    <table class="tablelist">
+        <thead>
+        <tr>
+            <th>序号</th>
+            <th>ID</th>
+            <th>留言人</th>
+            <th>留言时间</th>
+            <th>是否回复</th>
+            <th>回复人</th>
+            <th>回复时间</th>
+            <th>状态</th>
+            <th>操作</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for index,msg in msgs %}
+        <tr>
+            <td>{{index+1}}</td>
+            <td>{{msg['id']}}</td>
+            <td>{{msg['username']}}</td>
+            <td>{{msg['createtime']}}</td>
+            <td>{{msg['isreply']}}</td>
+            <td>{{msg['replyname']}}</td>
+            <td>{{msg['replytime']}}</td>
+            <td>{{msg['status']}}</td>
+            <td>
+                <a href="{{url('/msg/read')}}/id/{{msg['id']}}/page/{{page['page']}}{{cond}}" class="tablelink">阅读回复</a>
+            </td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    <div class="pagin">
+        {% if page['num'] %}
+        <div class="message">共<i class="blue">{{page['total']}}</i>条记录，当前显示第&nbsp;<i class="blue">{{page['page']}}&nbsp;</i>页</div>
+        <ul class="paginList">
+            <li class="paginItem"><a href="{{url('/msg/list/page/')}}{{page['before']}}{{cond}}"><span class="pagepre"></span></a></li>
+            {% for index in 1..page['num'] %}
+            {% if page['page'] == index %}
+            <li class="paginItem current"><a href="{{url('/msg/list/page/')}}{{index}}{{cond}}">{{index}}</a></li>
+            {% else %}
+            <li class="paginItem"><a href="{{url('/msg/list/page/')}}{{index}}{{cond}}">{{index}}</a></li>
+            {% endif %}
+            {% endfor %}
+            <li class="paginItem"><a href="{{url('/msg/list/page/')}}{{page['next']}}{{cond}}"><span class="pagenxt"></span></a></li>
+        </ul>
+        {% else %}
+        <p align="center">暂无记录...</p>
+        {% endif %}
+    </div>
+</div>
+<script type="text/javascript" src="{{static_url('assets')}}/js/jquery.js"></script>
+<script type="text/javascript">
+    $(document).ready(function(){
+        $('.tablelist tbody tr:odd').addClass('odd');
+    });
+</script>
+{% include "footer.phtml" %}

@@ -1,0 +1,62 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>禹译后台管理系统</title>
+    <link href="<?php echo $this->url->getStatic('assets'); ?>/css/style.css" rel="stylesheet" type="text/css" />
+    <link href="<?php echo $this->url->getStatic('assets'); ?>/ueditor/themes/default/css/umeditor.css" type="text/css" rel="stylesheet">
+</head>
+<body>
+<div class="place">
+    <span>位置：</span>
+    <ul class="placeul">
+        <li><a href="<?php echo $this->url->get('/'); ?>" target="_parent">首页</a></li>
+        <li><?php if ($navTopMenu) { ?><?php echo $navTopMenu['name']; ?><?php } else { ?>幽灵菜单<?php } ?></li>
+        <?php if ($navSonMenu) { ?>
+        <li><a href="<?php echo $navSonMenu['url']; ?><?php echo $cond; ?>"><?php echo $navSonMenu['name']; ?></a></li>
+        <?php } else { ?>
+        <li>幽灵菜单</a></li>
+        <?php } ?>
+<li><a href="<?php echo $this->url->get('msg/read'); ?>/id/<?php echo $msg['id']; ?><?php echo $cond; ?>">阅读回复</a></li>
+</ul>
+</div>
+<div class="formbody">
+    <form action="<?php echo $this->url->get('msg/reply'); ?><?php echo $cond; ?>" method="post" id="myform">
+        <ul class="forminfo">
+            <li><label for="content">留言内容</label></li>
+            <li style="padding-left: 85px;"><textarea disabled="disabled" style="background-color:#ffffff;resize: none;border-color: #a7b5bc #ffffff #ced9df #a7b5bc;border-style: solid;border-width: 1px;width:330px;padding:10px;height: 150px;overflow-y: scroll;"><?php echo $msg['content']; ?></textarea></li>
+            <li><label for="reply">回复内容</label><textarea  <?php if (!$isSendBut) { ?> disabled="disabled" <?php } ?> name="reply" id="reply" style="resize: none;height: 130px;" class="dfinput"><?php echo $msg['reply']; ?></textarea></li>
+            <li><label>&nbsp;</label><input type="hidden" name="id" value="<?php echo $msg['id']; ?>"/><input name="" type="submit" id="btn" class="btn" value="确认回复" <?php if (!$isSendBut) { ?>  title='禁止操作' style='background-image:none;background-color:#ddd; cursor:not-allowed;' disabled='disabled' <?php } ?>/><input style="margin-left: 68px;" name="" type="reset" class="btn" value="重置信息"/></li>
+        </ul>
+    </form>
+</div>
+<script type="text/javascript" src="<?php echo $this->url->getStatic('assets'); ?>/js/jquery.js"></script>
+<script type="text/javascript">
+    $(document).ready(function(){
+        $('#myform').submit(function(){
+            if(!$('#reply').val()){
+                alert('回复内容不能为空!');
+
+                return false;
+            }
+            return true;
+        });
+    });
+</script>
+<script type="text/javascript">
+    var links = document.links;
+
+    for(var i= 0,l=links.length; i < l; i++){
+        links[i].onclick = function(){
+            if(-1 == document.cookie.indexOf('admin_user=')){
+                parent.location.href = '/auth/login';
+
+                return false;
+            }
+
+            return true;
+        }
+    }
+</script>
+</body>
+</html>

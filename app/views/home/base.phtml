@@ -1,0 +1,94 @@
+{% include "header.phtml" %}
+    </ul>
+</div>
+<div class="rightinfo">
+    <div class="tools">
+        <ul class="toolbar">
+            <li><span><img src="{{static_url('assets')}}/images/t04.png" /></span><a href="{{url('/home/base')}}{{cond}}">刷新</a></li>
+            {% if isUpdateBut %}<li class="click savebut"><span><img src="{{static_url('assets')}}/images/t02.png" /></span>保存</li>{% endif %}
+            <li class="resetbut"><span><img src="{{static_url('assets')}}/images/t01.png" /></span>重置</li>
+        </ul>
+    </div>
+    <form action="{{url('/home/post')}}{{cond}}" method="post" enctype="multipart/form-data" id="myform">
+        <div class="homebase">
+            <h2>上传头像</h2>
+            <div><label for="avatar">选择头像: </label><input type="file" name="avatar" id="avatar" style="border: none;"/>
+            {% if user['savatar'] %}<img src="{{user['savatar']}}" style="border-radius: 50%;border: 1px solid #eee;"/>{% endif %}
+            {% if user['mavatar'] %}<img src="{{user['mavatar']}}" style="border-radius: 50%;border: 1px solid #eee;margin-left: 30px;"/>{% endif %}
+            </div>
+        </div>
+        <div class="homebase">
+            <h2>基本资料</h2>
+            <div>
+                <label for="username">用户名: </label><input type="text" name="username" id="username" value="{{user['username']}}" disabled="disabled"/>
+                <label for="mobile">手机: </label><input type="text" name="mobile" id="mobile" value="{{profile['mobile']}}"/>
+                <label for="email">邮箱: </label><input type="text" name="email" id="email" value="{{profile['email']}}"/>
+                <label for="birthday">生日: </label><input type="text" name="birthday" id="birthday" value="{{profile['birthday']}}" placeholder="点击选择日期"/>
+            </div>
+            <div>
+                <label for="zodiac">星座: </label><select name="zodiac" id="zodiac">
+                    {% for index,zodiac in zodiacs %}
+                    <option value="{{index}}" {% if index == profile['zodiac'] %}selected='selected'{% endif %}>{{zodiac}}</option>
+                    {% endfor %}
+                </select>
+                <label for="edu">学历: </label><select name="edu" id="edu">
+                    {% for index,edu in edus %}
+                    <option value="{{index}}" {% if index == profile['edu'] %}selected='selected'{% endif %}>{{edu}}</option>
+                    {% endfor %}
+                </select>
+                <label for="age">年龄: </label><select name="age" id="age">
+                    <option value="0">无</option>
+                    {% for index in 1..99 %}
+                    <option value="{{index}}" {% if index == profile['age'] %}selected='selected'{% endif %}>{{index}}岁</option>
+                    {% endfor %}
+                </select>
+                <label for="sex">性别: </label><select name="sex" id="sex">
+                    {% for index,sex in sexs %}
+                    <option value="{{index}}" {% if index == profile['sex'] %}selected='selected'{% endif %} >{{sex}}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div>
+                <label for="happy">兴趣: </label><input type="text" name="happy" id="happy" value="{{profile['happy']}}"/>
+                <label for="address">地址: </label><input type="text" name="address" id="address" value="{{profile['address']}}" style="width: 300px;"/>
+            </div>
+        </div>
+        <div class="homebase">
+            <h2>其他信息</h2>
+            <div>
+                <label for="coin">禹译币: </label><input type="text" name="coin" id="coin" value="{{profile['coin']}}" disabled="disabled"/>
+                <label for="status">用户状态: </label><input type="text" name="status" id="status" value="{{user['status']}}" disabled="disabled"/>
+                <label for="type">用户类型: </label><input type="text" name="type" id="type" value="{{user['type']}}" disabled="disabled"/>
+            </div>
+            <div>
+                <label for="regip">注册IP: </label><input type="text" name="regip" id="regip" value="{{user['regip']}}" disabled="disabled"/>
+                <label for="regtime">注册时间: </label><input type="text" name="regtime" id="regtime" value="{{user['regtime']}}" disabled="disabled"/>
+                <label for="loginip">登陆IP: </label><input type="text" name="loginip" id="loginip" value="{{user['loginip']}}" disabled="disabled"/>
+                <label for="logintime">最近登陆时间: </label><input type="text" name="logintime" id="logintime" value="{{user['logintime']}}" disabled="disabled"/>
+                <input type="hidden" name="uid" value="{{user['id']}}"/>
+            </div>
+        </div>
+    </form>
+</div>
+<script type="text/javascript" src="{{static_url('assets')}}/js/jquery.js"></script>
+<script type="text/javascript" src="{{static_url('assets')}}/js/jquery.date.js"></script>
+<script type="text/javascript">
+    $(function(){
+        $('.resetbut').click(function(){
+            $('#myform')[0].reset();
+        });
+        $('#birthday').date_input();
+        $('.savebut').click(function(){
+            if ($("#mobile").val() && !$("#mobile").val().match(/^((1[0-9]{2})+\d{8})$/)) {
+                alert("手机号码格式不正确！");
+                $("#mobile").focus();
+            }else if ($("#email").val() && !$("#email").val().match(/^\w+((-\w+)|(\.\w+))*\@[A-Za-z0-9]+((\.|-)[A-Za-z0-9]+)*\.[A-Za-z0-9]+$/)) {
+                alert("邮箱格式不正确");
+                $("#email").focus();
+            }else{
+                $('#myform')[0].submit();
+            }
+        });
+    })
+</script>
+{% include "footer.phtml" %}
