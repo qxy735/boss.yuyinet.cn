@@ -10,8 +10,8 @@
                 <label for="menuid">归属菜单</label>
                 <select name="menuid" id="menuid">
                     <option value="0">默认</option>
-                    {% for index,name in menus %}
-                    <option value="{{index}}">{{name}}</option>
+                    {% for menu in menus %}
+                    <option value="{{menu['id']}}">{{menu['name']}}</option>
                     {% endfor %}
                 </select>
             </li>
