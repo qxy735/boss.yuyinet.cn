@@ -606,7 +606,7 @@ class HomeController extends BaseController
             // 传递查询条件
             $this->view->cond = $cond;
 
-            $this->view->uploadUrl = '/assets/ueditor/php/imageUp.php?m=notice';
+            $this->view->uploadUrl = '/assets/ueditor/php/controller.php?m=notice';
 
             return $this->view->pick('home/msg');
         } catch (Exception $e) {

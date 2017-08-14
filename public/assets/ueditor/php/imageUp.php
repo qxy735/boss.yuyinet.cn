@@ -13,12 +13,10 @@
     $config = array(
         "url" => "/data/siteimg/{$m}/",
         "savePath" => $Path ,             //存储文件夹
-        "maxSize" => 1000 ,                   //允许的文件最大尺寸，单位KB
+        "maxSize" => 1024000 ,                   //允许的文件最大尺寸，单位KB
         "allowFiles" => array( ".gif" , ".png" , ".jpg" , ".jpeg" , ".bmp" )  //允许的文件格式
     );
 
-    //背景保存在临时目录中
-    $config[ "savePath" ] = $Path;
     $up = new Uploader( "upfile" , $config );
     $type = $_REQUEST['type'];
     $callback=$_GET['callback'];
@@ -29,7 +27,7 @@
      * 返回数据
      */
     if($callback) {
-        echo '<script>'.$callback.'('.json_encode($info).')</script>';
+        return '<script>'.$callback.'('.json_encode($info).')</script>';
     } else {
-        echo json_encode($info);
+        return json_encode($info);
     }
