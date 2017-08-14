@@ -256,7 +256,7 @@ parentid    int(10)     父ID
 name        varchar(32) 分类名称
 level       tinyint(1)  分类级别
 enabled     tinyint(1)  是否启用
-type        tinyint(1)  分类类别, 0 => 默认
+type        tinyint(1)  分类类别, 0 => 默认(普通文章), 1 => 软件下载文章, 2 => 作品文章
 displayorder	tinyint(3)	排序值
 createtime	int(10)		添加时间
 creator		varchar(32)	添加者
