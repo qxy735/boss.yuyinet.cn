@@ -178,7 +178,7 @@ class NoticeController extends BaseController
             // 传递查询条件信息
             $this->view->cond = $cond;
 
-            $this->view->uploadUrl = '/assets/ueditor/php/imageUp.php?m=notice';
+            $this->view->uploadUrl = '/assets/ueditor/php/controller.php?m=notice';
 
             return $this->view->pick('notice/create');
         } catch (Exception $e) {
@@ -372,7 +372,7 @@ class NoticeController extends BaseController
             // 传递公告状态信息
             $this->view->status = $this->status;
 
-            $this->view->uploadUrl = '/assets/ueditor/php/imageUp.php?m=notice';
+            $this->view->uploadUrl = '/assets/ueditor/php/controller.php?m=notice';
 
             return $this->view->pick('notice/edit');
         } catch (Exception $e) {

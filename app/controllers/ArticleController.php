@@ -414,7 +414,7 @@ class ArticleController extends BaseController
             // 传递默认允许评论
             $this->view->defaultComment = Article::ARTICLE_ALLOW_COMMENT;
 
-            $this->view->uploadUrl = '/assets/ueditor/php/imageUp.php?m=article';
+            $this->view->uploadUrl = '/assets/ueditor/php/controller.php?m=article';
 
             // 获取标签信息
             $tags = Tag::find([
@@ -887,7 +887,7 @@ class ArticleController extends BaseController
                 'columns' => 'id,name'
             ])->toArray();
 
-            $this->view->uploadUrl = '/assets/ueditor/php/imageUp.php?m=article';
+            $this->view->uploadUrl = '/assets/ueditor/php/controller.php?m=article';
 
             // 获取文章标签信息
             $articleTags = ArticleTag::find([
