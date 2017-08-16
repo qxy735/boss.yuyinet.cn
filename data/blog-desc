@@ -359,6 +359,8 @@ ispublic    tinyint(1)  是否公开, 0 => 否, 1 => 是
 status      tinyint(1)  文章状态, 0 => 正常, 1 => 草稿, 2 => 删除
 author      varchar(32) 文章作者, 默认为当前发布人
 visitcount  smallint(5) 浏览数
+goodcount   smallint(5) 点赞数
+badcount    smallint(5) 差评数
 commentcount smallint(5) 评论数
 downloadcount smallint(5) 下载数
 iscomment   tinyint(1)  是否允许评论 0 => 否, 1 => 是

@@ -416,6 +416,8 @@ CREATE TABLE  if not exists `blog_articles` (
 `status`  tinyint(1) UNSIGNED NOT NULL DEFAULT 0 ,
 `author`  varchar(32) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '' ,
 `visitcount`  smallint(5) UNSIGNED NOT NULL DEFAULT 0 ,
+`goodcount`  smallint(5) UNSIGNED NOT NULL DEFAULT 0 ,
+`badcount`  smallint(5) UNSIGNED NOT NULL DEFAULT 0 ,
 `commentcount`  smallint(5) UNSIGNED NOT NULL DEFAULT 0 ,
 `downloadcount`  smallint(5) UNSIGNED NOT NULL DEFAULT 0 ,
 `iscomment`  tinyint(1) UNSIGNED NOT NULL DEFAULT 0 ,
