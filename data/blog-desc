@@ -313,6 +313,7 @@ blog_tags(标签表)
 id          int(10)     主键ID
 name        varchar(32) 标签名
 enabled     tinyint(1)  是否启用 0 => 否, 1 => 是
+ishot       tinyint(1)  是否热门0 => 否，1 => 是
 createtime	int(10)		添加时间
 creator		varchar(32)	添加者
 lastoperate	int(10)		最后操作时间
@@ -358,6 +359,7 @@ come      varchar(255)文章来源
 ispublic    tinyint(1)  是否公开, 0 => 否, 1 => 是
 status      tinyint(1)  文章状态, 0 => 正常, 1 => 草稿, 2 => 删除
 author      varchar(32) 文章作者, 默认为当前发布人
+authorid    int(10)     作者ID，默认为0
 visitcount  smallint(5) 浏览数
 goodcount   smallint(5) 点赞数
 badcount    smallint(5) 差评数

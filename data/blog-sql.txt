@@ -362,6 +362,7 @@ CREATE TABLE if not exists `blog_tags` (
 `id`  int(10) UNSIGNED NOT NULL AUTO_INCREMENT ,
 `name`  varchar(32) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '' ,
 `enabled`  tinyint(1) UNSIGNED NOT NULL DEFAULT 0 ,
+`ishot`  tinyint(1) UNSIGNED NOT NULL DEFAULT 0 ,
 `createtime`  int(10) UNSIGNED NOT NULL DEFAULT 0 ,
 `creator`  varchar(32) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '' ,
 `lastoperate`  int(10) UNSIGNED NOT NULL DEFAULT 0 ,
@@ -415,6 +416,7 @@ CREATE TABLE  if not exists `blog_articles` (
 `ispublic`  tinyint(1) UNSIGNED NOT NULL DEFAULT 0 ,
 `status`  tinyint(1) UNSIGNED NOT NULL DEFAULT 0 ,
 `author`  varchar(32) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '' ,
+`authorid`  int(10) UNSIGNED NOT NULL DEFAULT 0 ,
 `visitcount`  smallint(5) UNSIGNED NOT NULL DEFAULT 0 ,
 `goodcount`  smallint(5) UNSIGNED NOT NULL DEFAULT 0 ,
 `badcount`  smallint(5) UNSIGNED NOT NULL DEFAULT 0 ,
@@ -428,7 +430,7 @@ CREATE TABLE  if not exists `blog_articles` (
 `lastoperate`  int(10) UNSIGNED NOT NULL DEFAULT 0 ,
 `lastoperator`  varchar(32) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '' ,
 PRIMARY KEY (`id`),
-INDEX `menu_category_ispublic_status_title` (`menuid`, `categoryid`, `ispublic`, `status`, `title`) USING BTREE
+INDEX `status_ispublic_menu_category_title` (`status`,`ispublic`,`menuid`,`categoryid`,`title`) USING BTREE
 )
 ENGINE=myisam charset utf8;
 
