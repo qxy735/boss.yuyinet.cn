@@ -217,7 +217,7 @@ class CategoryController extends BaseController
                 return $this->error('分类名称必填', "/category/create{$cond}");
             }
 
-            $posts['level'] = 1;
+            $posts['level'] = $posts['parentid'] ? 1 : 0;
             $posts['createtime'] = time();
             $posts['creator'] = $this->getUserName();
 
