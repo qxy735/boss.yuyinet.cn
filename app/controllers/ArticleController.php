@@ -365,7 +365,7 @@ class ArticleController extends BaseController
             // 获取顶级分类信息
             $topCategorys = Category::find([
                 'conditions' => 'parentid=' . Category::TOP_CATEGORY_ID . ' and enabled=' . Category::IS_ENABLED_CATEGORY,
-                'columns' => 'id,name'
+                'columns' => 'id,name,type'
             ])->toArray();
 
             foreach ($topCategorys as $topCategory) {
@@ -383,7 +383,7 @@ class ArticleController extends BaseController
             if ($topCategoryIds) {
                 $sonCategorys = Category::find([
                     'conditions' => 'parentid in(' . implode(',', $topCategoryIds) . ') and enabled=' . Category::IS_ENABLED_CATEGORY,
-                    'columns' => 'id,parentid,name'
+                    'columns' => 'id,parentid,name,type'
                 ])->toArray();
             }
 
@@ -397,11 +397,35 @@ class ArticleController extends BaseController
 
                 foreach ($sonCategorys as $sonCategory) {
                     if ($sonCategory['parentid'] == $topCategory['id']) {
+                        if (0 == $sonCategory['type']) {
+                            $name_extra = '(普通)';
+                        } elseif (1 == $sonCategory['type']) {
+                            $name_extra = '(下载)';
+                        } elseif (2 == $sonCategory['type']) {
+                            $name_extra = '(作品)';
+                        } else {
+                            $name_extra = '(其他)';
+                        }
+
+                        $sonCategory['name_extra'] = $name_extra;
+
                         $sons[] = $sonCategory;
                     }
                 }
 
                 $topCategory['son'] = $sons;
+
+                if (0 == $topCategory['type']) {
+                    $name_extra = '(普通)';
+                } elseif (1 == $topCategory['type']) {
+                    $name_extra = '(下载)';
+                } elseif (2 == $topCategory['type']) {
+                    $name_extra = '(作品)';
+                } else {
+                    $name_extra = '(其他)';
+                }
+
+                $topCategory['name_extra'] = $name_extra;
 
                 return $topCategory;
             }, $topCategorys);
@@ -467,7 +491,7 @@ class ArticleController extends BaseController
 
                 // 判断上传是否成功
                 if (!$file) {
-                    $msg = $upload->getErr() ? : '文章封面上传失败';
+                    $msg = $upload->getErr() ?: '文章封面上传失败';
 
                     return $this->error($msg, "/article/list{$cond}");
                 }
@@ -484,7 +508,7 @@ class ArticleController extends BaseController
 
                 // 判断上传是否成功
                 if (!$file) {
-                    $msg = $upload->getErr() ? : '附件上传失败';
+                    $msg = $upload->getErr() ?: '附件上传失败';
 
                     return $this->error($msg, "/article/list{$cond}");
                 }
@@ -867,11 +891,35 @@ class ArticleController extends BaseController
 
                 foreach ($sonCategorys as $sonCategory) {
                     if ($sonCategory['parentid'] == $topCategory['id']) {
+                        if (0 == $sonCategory['type']) {
+                            $name_extra = '(普通)';
+                        } elseif (1 == $sonCategory['type']) {
+                            $name_extra = '(下载)';
+                        } elseif (2 == $sonCategory['type']) {
+                            $name_extra = '(作品)';
+                        } else {
+                            $name_extra = '(其他)';
+                        }
+
+                        $sonCategory['name_extra'] = $name_extra;
+
                         $sons[] = $sonCategory;
                     }
                 }
 
                 $topCategory['son'] = $sons;
+
+                if (0 == $topCategory['type']) {
+                    $name_extra = '(普通)';
+                } elseif (1 == $topCategory['type']) {
+                    $name_extra = '(下载)';
+                } elseif (2 == $topCategory['type']) {
+                    $name_extra = '(作品)';
+                } else {
+                    $name_extra = '(其他)';
+                }
+
+                $topCategory['name_extra'] = $name_extra;
 
                 return $topCategory;
             }, $topCategorys);
@@ -957,7 +1005,7 @@ class ArticleController extends BaseController
 
         // 获取页码
         $page = (int)$this->getParam('_page');
-        $page = $page ? : 1;
+        $page = $page ?: 1;
 
         // 获取查询条件组合
         $cond = "/navid/{$navId}/page/{$page}" . ($title ? "/title/{$title}" : '') . ('' !== $iscomment ? "/iscomment/{$iscomment}" : '') . ('' !== $ispublic ? "/ispublic/{$ispublic}" : '') . ('' !== $cId ? "/cid/{$cId}" : '') . ('' !== $menuId ? "/menuid/{$menuId}" : '') . ('' !== $status ? "/status/{$status}" : '');
@@ -1020,7 +1068,7 @@ class ArticleController extends BaseController
 
                 // 判断上传是否成功
                 if (!$file) {
-                    $msg = $upload->getErr() ? : '文章封面上传失败';
+                    $msg = $upload->getErr() ?: '文章封面上传失败';
 
                     return $this->error($msg, "/article/edit/id/{$id}{$cond}");
                 }
@@ -1043,7 +1091,7 @@ class ArticleController extends BaseController
 
                 // 判断上传是否成功
                 if (!$file) {
-                    $msg = $upload->getErr() ? : '附件上传失败';
+                    $msg = $upload->getErr() ?: '附件上传失败';
 
                     return $this->error($msg, "/article/edit/id/{$id}{$cond}");
                 }

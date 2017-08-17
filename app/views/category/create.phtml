@@ -10,8 +10,17 @@
                 <select name="parentid" id="parentid">
                     <option value="0">顶级分类</option>
                     {% for category in categorys %}
-                    <option value="{{category['id']}}">{{category['name']}}</option>
+                    <option value="{{category['id']}}">{{category['name']}}{{category['name_extra']}}</option>
                     {% endfor %}
+                </select>
+            </li>
+            <li>
+                <label for="type">分类类型</label>
+                <select name="type" id="type">
+                    <option value="0">普通类型</option>
+                    <option value="1">下载类型</option>
+                    <option value="2">作品类型</option>
+                    <option value="3">其他类型</option>
                 </select>
             </li>
             <li>

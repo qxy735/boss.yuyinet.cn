@@ -168,8 +168,25 @@ class CategoryController extends BaseController
             // 获取顶级分类信息
             $categorys = Category::find([
                 'conditions' => 'parentid=' . Category::TOP_CATEGORY_ID . 'order by displayorder desc,id desc',
-                'columns' => 'id,name'
+                'columns' => 'id,name,type'
             ])->toArray();
+
+            // 处理分类别名
+            $categorys = array_map(function ($category) {
+                if (0 == $category['type']) {
+                    $name_extra = '(普通)';
+                } elseif (1 == $category['type']) {
+                    $name_extra = '(下载)';
+                } elseif (2 == $category['type']) {
+                    $name_extra = '(作品)';
+                } else {
+                    $name_extra = '(其他)';
+                }
+
+                $category['name_extra'] = $name_extra;
+
+                return $category;
+            }, $categorys);
 
             // 传递顶级分类信息
             $this->view->categorys = $categorys;
@@ -473,8 +490,25 @@ class CategoryController extends BaseController
             // 获取顶级分类信息
             $categorys = Category::find([
                 'conditions' => 'parentid=' . Category::TOP_CATEGORY_ID . 'order by displayorder desc,id desc',
-                'columns' => 'id,name'
+                'columns' => 'id,name,type'
             ])->toArray();
+
+            // 处理分类别名
+            $categorys = array_map(function ($category) {
+                if (0 == $category['type']) {
+                    $name_extra = '(普通)';
+                } elseif (1 == $category['type']) {
+                    $name_extra = '(下载)';
+                } elseif (2 == $category['type']) {
+                    $name_extra = '(作品)';
+                } else {
+                    $name_extra = '(其他)';
+                }
+
+                $category['name_extra'] = $name_extra;
+
+                return $category;
+            }, $categorys);
 
             // 传递顶级分类信息
             $this->view->categorys = $categorys;
@@ -523,7 +557,7 @@ class CategoryController extends BaseController
 
         // 获取页码
         $page = (int)$this->getParam('_page');
-        $page = $page ? : 1;
+        $page = $page ?: 1;
 
         // 获取查询条件组合
         $cond = "/navid/{$navId}/page/{$page}" . ($name ? "/name/{$name}" : '') . ('' !== $enabled ? "/enabled/{$enabled}" : '');

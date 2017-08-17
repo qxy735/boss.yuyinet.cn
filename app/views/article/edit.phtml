@@ -20,9 +20,9 @@
                 <select name="categoryid" id="categoryid">
                     <option value="0">默认</option>
                     {% for topCategory in topCategorys %}
-                    <option value="{{topCategory['id']}}" {% if topCategory['id'] == article['categoryid'] %} selected="selected" {% endif %}>{{topCategory['name']}}</option>
+                    <option value="{{topCategory['id']}}" {% if topCategory['id'] == article['categoryid'] %} selected="selected" {% endif %}>{{topCategory['name']}}{{topCategory['name_extra']}}</option>
                     {% for sonCategory in topCategory['son'] %}
-                    <option value="{{sonCategory['id']}}" {% if sonCategory['id'] == article['categoryid'] %}selected="selected"{% endif %}>&nbsp;&nbsp;&nbsp;{{sonCategory['name']}}</option>
+                    <option value="{{sonCategory['id']}}" {% if sonCategory['id'] == article['categoryid'] %}selected="selected"{% endif %}>&nbsp;&nbsp;&nbsp;{{sonCategory['name']}}{{sonCategory['name_extra']}}</option>
                     {% endfor %}
                     {% endfor %}
                 </select>
